@@ -27,6 +27,11 @@
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         body {
             background-color: var(--bg-dark);
             color: var(--text-light);
@@ -58,6 +63,7 @@
             padding: 18px;
             margin-bottom: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            width: 100%;
         }
 
         /* Controles Adaptables */
@@ -161,7 +167,6 @@
             border: 1px solid #334155;
         }
 
-        /* NUEVO ESTILO: Resaltado vistoso para las etiquetas de Asimetría y Curtosis */
         .badge-tag-highlight {
             font-size: 0.78rem;
             font-weight: 700;
@@ -173,10 +178,9 @@
             box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
         }
 
-        /* Tabla de Cálculos Matemáticos Adaptable */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 15px;
         }
 
@@ -194,6 +198,8 @@
             margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 5px;
         }
 
         .stat-row {
@@ -203,6 +209,7 @@
             font-size: 0.88rem;
             border-bottom: 1px solid rgba(255,255,255,0.05);
             padding-bottom: 6px;
+            gap: 10px;
         }
 
         .stat-val {
@@ -213,7 +220,6 @@
         .stat-val-green { color: #10b981; }
         .stat-val-yellow { color: #f59e0b; }
 
-        /* Cuadro de Demostración */
         .demo-box {
             background: rgba(30, 58, 138, 0.2);
             border: 1px solid #1e40af;
@@ -227,10 +233,9 @@
             gap: 10px;
         }
 
-        /* Contenedores de Gráficas Fluidos */
         .charts-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
 
@@ -239,6 +244,7 @@
             border-radius: 8px;
             padding: 15px;
             border: 1px solid #1e293b;
+            min-width: 0;
         }
 
         .chart-header {
@@ -247,6 +253,7 @@
             align-items: center;
             margin-bottom: 10px;
             flex-wrap: wrap;
+            gap: 8px;
         }
 
         .chart-box {
@@ -255,10 +262,13 @@
             height: 320px;
         }
 
-        @media (min-width: 768px) {
-            h1 { font-size: 2rem; }
-            .chart-box { height: 380px; }
+        @media (max-width: 768px) {
+            body { padding: 8px; }
+            h1 { font-size: 1.3rem; }
+            .panel { padding: 12px; }
+            .chart-box { height: 260px; }
             .btn-container { grid-column: auto; }
+            .badge-tag-highlight { font-size: 0.7rem; padding: 3px 8px; }
         }
     </style>
 </head>
@@ -284,12 +294,12 @@
 
             <div class="control-group">
                 <label>2. Tamaño de Muestra (N) <span class="slider-val" id="valN">30</span></label>
-                <input type="range" id="sampleN" min="2" max="100" value="30" oninput="document.getElementById('valN').innerText=this.value; simular();">
+                <input type="range" id="sampleN" min="2" max="10000" value="30" oninput="document.getElementById('valN').innerText=parseInt(this.value).toLocaleString(); simular();">
             </div>
 
             <div class="control-group">
                 <label>3. Cantidad de Muestras (K) <span class="slider-val" id="valK">1,000</span></label>
-                <input type="range" id="sampleK" min="100" max="5000" step="100" value="1000" oninput="document.getElementById('valK').innerText=parseInt(this.value).toLocaleString(); simular();">
+                <input type="range" id="sampleK" min="100" max="10000" step="100" value="1000" oninput="document.getElementById('valK').innerText=parseInt(this.value).toLocaleString(); simular();">
             </div>
 
             <div class="btn-container">
@@ -299,7 +309,7 @@
         </div>
     </div>
 
-    <!-- DATOS MATEMÁTICOS Y CÁLCULOS COMPLETOS -->
+    <!-- CÁLCULOS -->
     <div class="panel">
         <div class="section-header">
             <div class="section-title">📊 TABLA DE CÁLCULOS MATEMÁTICOS Y DEMOSTRACIÓN TLC</div>
@@ -307,7 +317,6 @@
         </div>
 
         <div class="stats-grid">
-            <!-- Columna 1: Población Original -->
             <div class="stat-card">
                 <div class="stat-card-title">
                     <span>1. POBLACIÓN ORIGINAL (PARÁMETROS TEÓRICOS)</span>
@@ -323,7 +332,6 @@
                 </div>
             </div>
 
-            <!-- Columna 2: Medias Muestrales -->
             <div class="stat-card">
                 <div class="stat-card-title">
                     <span>2. MEDIAS MUESTRALES (X̄) Y FÓRMULAS TLC</span>
@@ -340,19 +348,18 @@
         </div>
     </div>
 
-    <!-- CUADRO DE DEMOSTRACIÓN DEL TLC -->
+    <!-- CUADRO DE TEXTO -->
     <div class="demo-box" id="demoText">
         💡 <strong>Demostración Matemática del TLC (n = 30 ≥ 30, K = 1000):</strong> La media está centrada en μ = 1.000. El 95% de las medias caen en el intervalo [0.642, 1.358]. Al aumentar K a 10,000, la curva empírica se amolda perfectamente a la Campana de Gauss teórica.
     </div>
 
-    <!-- GRÁFICAS Y CAMPANA DE GAUSS -->
+    <!-- GRÁFICAS -->
     <div class="panel">
         <div class="charts-container">
-            <!-- Gráfica 1 -->
             <div class="chart-card">
                 <div class="chart-header">
                     <span style="font-size:0.85rem; font-weight:bold; color:#ef4444;">POBLACIÓN ORIGINAL (X)</span>
-                    <div style="display:flex; gap:6px;">
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
                         <span class="badge-tag-highlight" id="badgePopSkew">Asimetría g₁: 2.00</span>
                         <span class="badge-tag-highlight" id="badgePopKurt">Curtosis g₂: 6.00</span>
                     </div>
@@ -364,11 +371,10 @@
                 </div>
             </div>
 
-            <!-- Gráfica 2 -->
             <div class="chart-card">
                 <div class="chart-header">
                     <span style="font-size:0.85rem; font-weight:bold; color:#38bdf8;">MEDIAS MUESTRALES (X̄)</span>
-                    <div style="display:flex; gap:6px;">
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
                         <span class="badge-tag-highlight" id="badgeEmpSkew">Asimetría g₁: 0.38 [Sesgo Der.]</span>
                         <span class="badge-tag-highlight" id="badgeEmpKurt">Curtosis g₂: 0.11 [Normal]</span>
                     </div>
@@ -383,7 +389,6 @@
     </div>
 
     <script>
-        // Registrar plugin de anotaciones para líneas verticales
         if (typeof ChartAnnotation !== 'undefined') {
             Chart.register(ChartAnnotation);
         }
@@ -392,13 +397,27 @@
         let chartMeansInstance = null;
         let animationTimer = null;
 
+        function obtenerParametrosTeoricos(tipo) {
+            if(tipo === 'exponencial') return { mean: 1.0, std: 1.0, skew: 2.0, kurt: 6.0 };
+            if(tipo === 'uniforme') return { mean: 5.0, std: 2.88675, skew: 0.0, kurt: -1.2 };
+            if(tipo === 'bimodal') return { mean: 5.0, std: 3.16227, skew: 0.0, kurt: -1.5 };
+            if(tipo === 'dado') return { mean: 3.5, std: 1.70782, skew: 0.0, kurt: -1.268 };
+            return { mean: 1.0, std: 1.0, skew: 0, kurt: 0 };
+        }
+
+        /* Generador continuo e infinito directo según la distribución */
+        function generarRandomPoblacion(tipo) {
+            if(tipo === 'exponencial') return -Math.log(1 - Math.random());
+            if(tipo === 'uniforme') return Math.random() * 10;
+            if(tipo === 'bimodal') return Math.random() > 0.5 ? Math.random() * 2 : 8 + Math.random() * 2;
+            if(tipo === 'dado') return Math.floor(Math.random() * 6) + 1;
+            return 0;
+        }
+
         function generarPoblacion(tipo) {
             let data = [];
             for(let i = 0; i < 10000; i++) {
-                if(tipo === 'exponencial') data.push(-Math.log(1 - Math.random()));
-                else if(tipo === 'uniforme') data.push(Math.random() * 10);
-                else if(tipo === 'bimodal') data.push(Math.random() > 0.5 ? Math.random() * 2 : 8 + Math.random() * 2);
-                else if(tipo === 'dado') data.push(Math.floor(Math.random() * 6) + 1);
+                data.push(generarRandomPoblacion(tipo));
             }
             return data;
         }
@@ -416,26 +435,39 @@
             const m3 = data.reduce((a,b)=>a+Math.pow(b-mean,3),0) / n;
             const m4 = data.reduce((a,b)=>a+Math.pow(b-mean,4),0) / n;
 
-            const skewness = m3 / Math.pow(std, 3);
-            const kurtosis = (m4 / Math.pow(std, 4)) - 3;
+            const skewness = std > 0 ? m3 / Math.pow(std, 3) : 0;
+            const kurtosis = std > 0 ? (m4 / Math.pow(std, 4)) - 3 : 0;
 
             return { mean, std, variance, skewness, kurtosis };
+        }
+
+        /* Helper para formatear etiquetas de asimetría con rango de tolerancia */
+        function getSkewText(val) {
+            if (Math.abs(val) <= 0.10) return "Simétrica";
+            return val > 0 ? "Sesgo Der." : "Sesgo Izq.";
+        }
+
+        /* Helper para formatear etiquetas de curtosis con rango de tolerancia */
+        function getKurtText(val) {
+            if (Math.abs(val) <= 0.10) return "Normal";
+            return val > 0 ? "Leptocúrtica" : "Platicúrtica";
         }
 
         function createHistogramData(data, binsCount = 30) {
             const min = Math.min(...data);
             const max = Math.max(...data);
-            const step = (max - min) / binsCount || 1;
+            const step = (max - min) / binsCount || 0.0001;
             let bins = new Array(binsCount).fill(0);
             let labels = [];
 
             for(let i = 0; i < binsCount; i++) {
-                labels.push((min + (i + 0.5) * step).toFixed(2));
+                labels.push((min + (i + 0.5) * step).toFixed(3));
             }
 
             data.forEach(val => {
                 let idx = Math.floor((val - min) / step);
                 if(idx >= binsCount) idx = binsCount - 1;
+                if(idx < 0) idx = 0;
                 bins[idx]++;
             });
 
@@ -450,58 +482,78 @@
             const K = parseInt(document.getElementById('sampleK').value);
 
             const popData = generarPoblacion(tipo);
-            const popStats = calcMoments(popData);
+            const popTeorico = obtenerParametrosTeoricos(tipo);
 
-            // Muestreo
             let means = [];
             for(let i = 0; i < K; i++) {
                 let sum = 0;
                 for(let j = 0; j < N; j++) {
-                    sum += popData[Math.floor(Math.random() * popData.length)];
+                    sum += generarRandomPoblacion(tipo);
                 }
                 means.push(sum / N);
             }
 
             const meansStats = calcMoments(means);
-            const seTeorico = popStats.std / Math.sqrt(N);
-            const rangoInfTeorico = popStats.mean - 1.96 * seTeorico;
-            const rangoSupTeorico = popStats.mean + 1.96 * seTeorico;
+            
+            const seTeorico = popTeorico.std / Math.sqrt(N);
+            const rangoInfTeorico = popTeorico.mean - 1.96 * seTeorico;
+            const rangoSupTeorico = popTeorico.mean + 1.96 * seTeorico;
 
-            // Actualizar Interfaz
-            document.getElementById('popMean').innerText = popStats.mean.toFixed(3);
-            document.getElementById('popStd').innerText = popStats.std.toFixed(3);
-            document.getElementById('popSkew').innerText = (popStats.skewness >= 0 ? '+' : '') + popStats.skewness.toFixed(2) + " (Sesgo Der.)";
-            document.getElementById('popKurt').innerText = (popStats.kurtosis >= 0 ? '+' : '') + popStats.kurtosis.toFixed(2) + " (Apuntada)";
+            document.getElementById('popMean').innerText = popTeorico.mean.toFixed(3);
+            document.getElementById('popStd').innerText = popTeorico.std.toFixed(3);
+            document.getElementById('popSkew').innerText = (popTeorico.skew >= 0 ? '+' : '') + popTeorico.skew.toFixed(2) + " (" + getSkewText(popTeorico.skew) + ")";
+            document.getElementById('popKurt').innerText = (popTeorico.kurt >= 0 ? '+' : '') + popTeorico.kurt.toFixed(2) + " (" + getKurtText(popTeorico.kurt) + ")";
 
-            document.getElementById('seTeorico').innerText = seTeorico.toFixed(3);
-            document.getElementById('seEmpirico').innerText = meansStats.std.toFixed(3);
-            document.getElementById('meanCompare').innerText = `${meansStats.mean.toFixed(3)} (Teórica μ: ${popStats.mean.toFixed(3)})`;
+            document.getElementById('seTeorico').innerText = seTeorico.toFixed(4);
+            document.getElementById('seEmpirico').innerText = meansStats.std.toFixed(4);
+            document.getElementById('meanCompare').innerText = `${meansStats.mean.toFixed(3)} (Teórica μ: ${popTeorico.mean.toFixed(3)})`;
             document.getElementById('rangoInf').innerText = `${(meansStats.mean - 1.96*meansStats.std).toFixed(3)} (Teórico: ${rangoInfTeorico.toFixed(3)})`;
             document.getElementById('rangoSup').innerText = `${(meansStats.mean + 1.96*meansStats.std).toFixed(3)} (Teórico: ${rangoSupTeorico.toFixed(3)})`;
 
-            document.getElementById('empSkew').innerText = (meansStats.skewness >= 0 ? '+' : '') + meansStats.skewness.toFixed(2) + " (Sesgo Der.)";
-            document.getElementById('empKurt').innerText = (meansStats.kurtosis >= 0 ? '+' : '') + meansStats.kurtosis.toFixed(2) + " (Normal)";
+            document.getElementById('empSkew').innerText = (meansStats.skewness >= 0 ? '+' : '') + meansStats.skewness.toFixed(2) + " (" + getSkewText(meansStats.skewness) + ")";
+            document.getElementById('empKurt').innerText = (meansStats.kurtosis >= 0 ? '+' : '') + meansStats.kurtosis.toFixed(2) + " (" + getKurtText(meansStats.kurtosis) + ")";
 
-            document.getElementById('badgePopSkew').innerText = `Asimetría g₁: ${popStats.skewness.toFixed(2)}`;
-            document.getElementById('badgePopKurt').innerText = `Curtosis g₂: ${popStats.kurtosis.toFixed(2)}`;
-            document.getElementById('badgeEmpSkew').innerText = `Asimetría g₁: ${meansStats.skewness.toFixed(2)} [Sesgo Der.]`;
-            document.getElementById('badgeEmpKurt').innerText = `Curtosis g₂: ${meansStats.kurtosis.toFixed(2)} [Normal]`;
+            document.getElementById('badgePopSkew').innerText = `Asimetría g₁: ${popTeorico.skew.toFixed(2)}`;
+            document.getElementById('badgePopKurt').innerText = `Curtosis g₂: ${popTeorico.kurt.toFixed(2)}`;
+            document.getElementById('badgeEmpSkew').innerText = `Asimetría g₁: ${meansStats.skewness.toFixed(2)} [${getSkewText(meansStats.skewness)}]`;
+            document.getElementById('badgeEmpKurt').innerText = `Curtosis g₂: ${meansStats.kurtosis.toFixed(2)} [${getKurtText(meansStats.kurtosis)}]`;
 
-            document.getElementById('demoText').innerHTML = `💡 <strong>Demostración Matemática del TLC (n = ${N} ${N>=30?'≥ 30':`< 30`}, K = ${K}):</strong> La media está centrada en μ = ${popStats.mean.toFixed(3)}. El 95% de las medias caen en el intervalo [${rangoInfTeorico.toFixed(3)}, ${rangoSupTeorico.toFixed(3)}]. Al aumentar K a 10,000, la curva empírica se amolda perfectamente a la Campana de Gauss teórica.`;
+            document.getElementById('demoText').innerHTML = `💡 <strong>Demostración Matemática del TLC (n = ${N.toLocaleString()} ${N>=30?'≥ 30':`< 30`}, K = ${K.toLocaleString()}):</strong> La media está centrada en μ = ${popTeorico.mean.toFixed(3)}. El 95% de las medias caen en el intervalo [${rangoInfTeorico.toFixed(3)}, ${rangoSupTeorico.toFixed(3)}]. Al aumentar K a 10,000, la curva empírica se amolda perfectamente a la Campana de Gauss teórica.`;
 
-            renderCharts(popData, means, popStats.mean, seTeorico, K, rangoInfTeorico, rangoSupTeorico);
+            renderCharts(popData, means, popTeorico.mean, seTeorico, K, rangoInfTeorico, rangoSupTeorico, N);
         }
 
-        function renderCharts(popData, meansData, mu, seTeorico, K, rInf, rSup) {
+        function renderCharts(popData, meansData, mu, seTeorico, K, rInf, rSup, N) {
             const popHist = createHistogramData(popData, 25);
-            const meansHist = createHistogramData(meansData, 30);
+            
+            // CONSTRUCCIÓN CON ESCALA CONTINUA NUMÉRICA (Cero Desfase)
+            const numBins = 35;
+            const minX = mu - 4 * seTeorico;
+            const maxX = mu + 4 * seTeorico;
+            const step = (maxX - minX) / numBins;
 
-            // Curva Teórica de Gauss Verde
-            const gaussLine = meansHist.labels.map(xStr => {
-                const x = parseFloat(xStr);
-                const pdf = normalPDF(x, mu, seTeorico);
-                return pdf * K * meansHist.step;
+            let binCounts = new Array(numBins).fill(0);
+            meansData.forEach(v => {
+                let idx = Math.floor((v - minX) / step);
+                if (idx >= 0 && idx < numBins) binCounts[idx]++;
             });
+
+            let barPoints = [];
+            for (let i = 0; i < numBins; i++) {
+                let xCenter = minX + (i + 0.5) * step;
+                barPoints.push({ x: xCenter, y: binCounts[i] });
+            }
+
+            // Puntos continuos simétricos de la Gaussiana Teórica
+            let gaussPoints = [];
+            const stepsGauss = 100;
+            const stepGauss = (maxX - minX) / stepsGauss;
+            for (let i = 0; i <= stepsGauss; i++) {
+                let x = minX + i * stepGauss;
+                let pdf = normalPDF(x, mu, seTeorico);
+                let y = pdf * K * step;
+                gaussPoints.push({ x: x, y: y });
+            }
 
             if(chartPopInstance) chartPopInstance.destroy();
             if(chartMeansInstance) chartMeansInstance.destroy();
@@ -525,54 +577,37 @@
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        x: { grid: { display: false }, ticks: { color: '#64748b' } },
+                        x: { grid: { display: false }, ticks: { color: '#64748b', maxTicksLimit: 8 } },
                         y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b' } }
                     }
                 }
             });
 
-            // Buscar Índices exactos de etiquetas x para fijar las líneas verticales
-            function findClosestLabelIndex(targetVal) {
-                let closestIdx = 0;
-                let minDiff = Infinity;
-                meansHist.labels.forEach((labelStr, i) => {
-                    let diff = Math.abs(parseFloat(labelStr) - targetVal);
-                    if (diff < minDiff) {
-                        minDiff = diff;
-                        closestIdx = i;
-                    }
-                });
-                return closestIdx;
-            }
-
-            const idxMean = findClosestLabelIndex(mu);
-            const idxInf = findClosestLabelIndex(rInf);
-            const idxSup = findClosestLabelIndex(rSup);
-
-            // Chart 2 con Gauss y Líneas Indicadoras Discontinuas Dinámicas (Alineadas en la parte superior)
+            // Chart 2 - Con Escala Numérica Lineal Exacta
             const ctxMeans = document.getElementById('chartMeans').getContext('2d');
 
             chartMeansInstance = new Chart(ctxMeans, {
                 data: {
-                    labels: meansHist.labels,
                     datasets: [
                         {
                             type: 'line',
                             label: 'Campana de Gauss Teórica (Normal)',
-                            data: gaussLine,
+                            data: gaussPoints,
                             borderColor: '#10b981',
                             borderWidth: 2.5,
                             fill: false,
                             pointRadius: 0,
-                            tension: 0.4
+                            tension: 0.3
                         },
                         {
                             type: 'bar',
                             label: 'Promedios Muestrales (Empírico)',
-                            data: meansHist.bins,
+                            data: barPoints,
                             backgroundColor: 'rgba(56, 189, 248, 0.7)',
                             borderColor: '#38bdf8',
-                            borderWidth: 1
+                            borderWidth: 1,
+                            barPercentage: 1.0,
+                            categoryPercentage: 1.0
                         }
                     ]
                 },
@@ -580,13 +615,13 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { labels: { color: '#94a3b8' } },
+                        legend: { labels: { color: '#94a3b8', font: { size: 10 } } },
                         annotation: {
                             annotations: {
                                 lineInf: {
                                     type: 'line',
-                                    xMin: idxInf,
-                                    xMax: idxInf,
+                                    xMin: rInf,
+                                    xMax: rInf,
                                     borderColor: '#ef4444',
                                     borderWidth: 2,
                                     borderDash: [4, 4],
@@ -595,15 +630,15 @@
                                         content: `Inf: ${rInf.toFixed(2)}`,
                                         color: '#ef4444',
                                         backgroundColor: 'rgba(15, 23, 42, 0.85)',
-                                        position: 'end', /* Mueve la etiqueta a la parte superior */
+                                        position: 'end',
                                         yAdjust: 10,
-                                        font: { size: 11, weight: 'bold' }
+                                        font: { size: 10, weight: 'bold' }
                                     }
                                 },
                                 lineMean: {
                                     type: 'line',
-                                    xMin: idxMean,
-                                    xMax: idxMean,
+                                    xMin: mu,
+                                    xMax: mu,
                                     borderColor: '#f59e0b',
                                     borderWidth: 2.5,
                                     borderDash: [4, 4],
@@ -612,15 +647,15 @@
                                         content: `μ: ${mu.toFixed(2)}`,
                                         color: '#f59e0b',
                                         backgroundColor: 'rgba(15, 23, 42, 0.85)',
-                                        position: 'end', /* Mueve la etiqueta a la parte superior */
+                                        position: 'end',
                                         yAdjust: 10,
-                                        font: { size: 11, weight: 'bold' }
+                                        font: { size: 10, weight: 'bold' }
                                     }
                                 },
                                 lineSup: {
                                     type: 'line',
-                                    xMin: idxSup,
-                                    xMax: idxSup,
+                                    xMin: rSup,
+                                    xMax: rSup,
                                     borderColor: '#10b981',
                                     borderWidth: 2,
                                     borderDash: [4, 4],
@@ -629,16 +664,25 @@
                                         content: `Sup: ${rSup.toFixed(2)}`,
                                         color: '#10b981',
                                         backgroundColor: 'rgba(15, 23, 42, 0.85)',
-                                        position: 'end', /* Mueve la etiqueta a la parte superior */
+                                        position: 'end',
                                         yAdjust: 10,
-                                        font: { size: 11, weight: 'bold' }
+                                        font: { size: 10, weight: 'bold' }
                                     }
                                 }
                             }
                         }
                     },
                     scales: {
-                        x: { grid: { display: false }, ticks: { color: '#64748b' } },
+                        x: {
+                            type: 'linear',
+                            min: minX,
+                            maxX: maxX,
+                            grid: { display: false },
+                            ticks: {
+                                color: '#64748b',
+                                callback: function(val) { return val.toFixed(3); }
+                            }
+                        },
                         y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b' } }
                     }
                 }
@@ -653,8 +697,8 @@
             const K = parseInt(document.getElementById('sampleK').value);
 
             const popData = generarPoblacion(tipo);
-            const popStats = calcMoments(popData);
-            const seTeorico = popStats.std / Math.sqrt(N);
+            const popTeorico = obtenerParametrosTeoricos(tipo);
+            const seTeorico = popTeorico.std / Math.sqrt(N);
 
             let meansAcc = [];
             let currentStep = 0;
@@ -668,19 +712,19 @@
                 for(let i = meansAcc.length; i < currentStep; i++) {
                     let sum = 0;
                     for(let j = 0; j < N; j++) {
-                        sum += popData[Math.floor(Math.random() * popData.length)];
+                        sum += generarRandomPoblacion(tipo);
                     }
                     meansAcc.push(sum / N);
                 }
 
                 const meansStats = calcMoments(meansAcc);
 
-                document.getElementById('seEmpirico').innerText = meansStats.std.toFixed(3);
-                document.getElementById('meanCompare').innerText = `${meansStats.mean.toFixed(3)} (Teórica μ: ${popStats.mean.toFixed(3)})`;
-                document.getElementById('empSkew').innerText = (meansStats.skewness >= 0 ? '+' : '') + meansStats.skewness.toFixed(2) + " (Sesgo Der.)";
-                document.getElementById('empKurt').innerText = (meansStats.kurtosis >= 0 ? '+' : '') + meansStats.kurtosis.toFixed(2) + " (Normal)";
+                document.getElementById('seEmpirico').innerText = meansStats.std.toFixed(4);
+                document.getElementById('meanCompare').innerText = `${meansStats.mean.toFixed(3)} (Teórica μ: ${popTeorico.mean.toFixed(3)})`;
+                document.getElementById('empSkew').innerText = (meansStats.skewness >= 0 ? '+' : '') + meansStats.skewness.toFixed(2) + " (" + getSkewText(meansStats.skewness) + ")";
+                document.getElementById('empKurt').innerText = (meansStats.kurtosis >= 0 ? '+' : '') + meansStats.kurtosis.toFixed(2) + " (" + getKurtText(meansStats.kurtosis) + ")";
 
-                renderCharts(popData, meansAcc, popStats.mean, seTeorico, meansAcc.length, popStats.mean - 1.96*seTeorico, popStats.mean + 1.96*seTeorico);
+                renderCharts(popData, meansAcc, popTeorico.mean, seTeorico, meansAcc.length, popTeorico.mean - 1.96*seTeorico, popTeorico.mean + 1.96*seTeorico, N);
 
                 if(currentStep >= K) {
                     clearInterval(animationTimer);
