@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador del Teorema del Límite Central (TLC)</title>
+    <!-- Chart.js y Plugin de Anotaciones/Líneas CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1/dist/chartjs-plugin-annotation.min.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0a0f1d;
+            --card-bg: #111827;
+            --card-border: #1f293d;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-red: #ef4444;
+            --text-light: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 15px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .panel {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Controles Adaptables */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #38bdf8;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .slider-val {
+            background: #1e293b;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #38bdf8;
+            font-size: 0.85rem;
+        }
+
+        select, input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            grid-column: 1 / -1;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 140px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        button.btn-alt {
+            background: #0d9488;
+        }
+
+        button:active {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+
+        /* Titulos de Secciones */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-tag {
+            font-size: 0.75rem;
+            background: #1e293b;
+            padding: 4px 10px;
+            border-radius: 20px;
+            color: #94a3b8;
+            border: 1px solid #334155;
+        }
+
+        /* NUEVO ESTILO: Resaltado vistoso para las etiquetas de Asimetría y Curtosis */
+        .badge-tag-highlight {
+            font-size: 0.78rem;
+            font-weight: 700;
+            background: #0f2b48;
+            padding: 5px 12px;
+            border-radius: 20px;
+            color: #e0f2fe;
+            border: 1.5px solid #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+        }
+
+        /* Tabla de Cálculos Matemáticos Adaptable */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
+        }
+
+        .stat-card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 0.88rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 6px;
+        }
+
+        .stat-val {
+            font-weight: bold;
+            color: #ef4444;
+        }
+
+        .stat-val-green { color: #10b981; }
+        .stat-val-yellow { color: #f59e0b; }
+
+        /* Cuadro de Demostración */
+        .demo-box {
+            background: rgba(30, 58, 138, 0.2);
+            border: 1px solid #1e40af;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 0.88rem;
+            color: #93c5fd;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Contenedores de Gráficas Fluidos */
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-card {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #1e293b;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .chart-box {
+            position: relative;
+            width: 100%;
+            height: 320px;
+        }
+
+        @media (min-width: 768px) {
+            h1 { font-size: 2rem; }
+            .chart-box { height: 380px; }
+            .btn-container { grid-column: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Simulador del Teorema del Límite Central (TLC)</h1>
+        <p class="subtitle">Demostración matemática e interactiva de la Campana de Gauss</p>
+    </header>
+
+    <!-- CONTROLES -->
+    <div class="panel">
+        <div class="controls-grid">
+            <div class="control-group">
+                <label for="distribucion">1. Distribución Poblacional</label>
+                <select id="distribucion" onchange="simular()">
+                    <option value="exponencial">Exponencial (Sesgo Positivo)</option>
+                    <option value="uniforme">Uniforme (Equiprobable)</option>
+                    <option value="bimodal">Bimodal</option>
+                    <option value="dado">Lanzamiento de Dado</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>2. Tamaño de Muestra (N) <span class="slider-val" id="valN">30</span></label>
+                <input type="range" id="sampleN" min="2" max="100" value="30" oninput="document.getElementById('valN').innerText=this.value; simular();">
+            </div>
+
+            <div class="control-group">
+                <label>3. Cantidad de Muestras (K) <span class="slider-val" id="valK">1,000</span></label>
+                <input type="range" id="sampleK" min="100" max="5000" step="100" value="1000" oninput="document.getElementById('valK').innerText=parseInt(this.value).toLocaleString(); simular();">
+            </div>
+
+            <div class="btn-container">
+                <button onclick="simular()"><span>🔄</span> Re-Simular</button>
+                <button class="btn-alt" onclick="animarSimulacion()"><span>▶</span> Animar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DATOS MATEMÁTICOS Y CÁLCULOS COMPLETOS -->
+    <div class="panel">
+        <div class="section-header">
+            <div class="section-title">📊 TABLA DE CÁLCULOS MATEMÁTICOS Y DEMOSTRACIÓN TLC</div>
+            <div class="badge-tag">FÓRMULAS ACTIVAS EN TIEMPO REAL</div>
+        </div>
+
+        <div class="stats-grid">
+            <!-- Columna 1: Población Original -->
+            <div class="stat-card">
+                <div class="stat-card-title">
+                    <span>1. POBLACIÓN ORIGINAL (PARÁMETROS TEÓRICOS)</span>
+                    <span class="badge-tag">PARÁMETROS FIJOS</span>
+                </div>
+                <div class="stat-row"><span>Media Poblacional (μ):</span><span class="stat-val" id="popMean">1.000</span></div>
+                <div class="stat-row"><span>Desviación Estándar (σ):</span><span class="stat-val" id="popStd">1.000</span></div>
+                <div class="stat-row"><span>Asimetría Fisher (g₁ = m₃/σ³):</span><span class="stat-val-yellow" id="popSkew">+2.00 (Sesgo Der.)</span></div>
+                <div class="stat-row"><span>Curtosis Fisher (g₂ = m₄/σ⁴ - 3):</span><span class="stat-val-yellow" id="popKurt">+6.00 (Apuntada)</span></div>
+                <div class="stat-row" style="border:none; margin-top:10px;">
+                    <span>Forma Visual Poblacional:</span>
+                    <span style="color:#94a3b8;" id="popShape">Asimétrica Positiva (Cola a la derecha)</span>
+                </div>
+            </div>
+
+            <!-- Columna 2: Medias Muestrales -->
+            <div class="stat-card">
+                <div class="stat-card-title">
+                    <span>2. MEDIAS MUESTRALES (X̄) Y FÓRMULAS TLC</span>
+                    <span class="badge-tag" style="color:#10b981;">CONVERGENCIA EMPÍRICA</span>
+                </div>
+                <div class="stat-row"><span>Error Estándar Teórico (SE = σ/√N):</span><span class="stat-val-green" id="seTeorico">0.183</span></div>
+                <div class="stat-row"><span>Error Estándar Empírico (s_x̄):</span><span class="stat-val-green" id="seEmpirico">0.184</span></div>
+                <div class="stat-row"><span>Media (μ teórica vs X̄ empírica):</span><span class="stat-val-yellow" id="meanCompare">1.000 (Teórica μ: 1.000)</span></div>
+                <div class="stat-row"><span>Rango Menor TLC (μ - 1.96·SE):</span><span class="stat-val" id="rangoInf">0.640 (Teórico: 0.642)</span></div>
+                <div class="stat-row"><span>Rango Mayor TLC (μ + 1.96·SE):</span><span class="stat-val-green" id="rangoSup">1.360 (Teórico: 1.358)</span></div>
+                <div class="stat-row"><span>Asimetría Empírica (g₁):</span><span class="stat-val-yellow" id="empSkew">+0.38 (Sesgo Der.)</span></div>
+                <div class="stat-row" style="border:none;"><span>Curtosis Empírica (g₂):</span><span class="stat-val-yellow" id="empKurt">+0.11 (Normal)</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUADRO DE DEMOSTRACIÓN DEL TLC -->
+    <div class="demo-box" id="demoText">
+        💡 <strong>Demostración Matemática del TLC (n = 30 ≥ 30, K = 1000):</strong> La media está centrada en μ = 1.000. El 95% de las medias caen en el intervalo [0.642, 1.358]. Al aumentar K a 10,000, la curva empírica se amolda perfectamente a la Campana de Gauss teórica.
+    </div>
+
+    <!-- GRÁFICAS Y CAMPANA DE GAUSS -->
+    <div class="panel">
+        <div class="charts-container">
+            <!-- Gráfica 1 -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span style="font-size:0.85rem; font-weight:bold; color:#ef4444;">POBLACIÓN ORIGINAL (X)</span>
+                    <div style="display:flex; gap:6px;">
+                        <span class="badge-tag-highlight" id="badgePopSkew">Asimetría g₁: 2.00</span>
+                        <span class="badge-tag-highlight" id="badgePopKurt">Curtosis g₂: 6.00</span>
+                    </div>
+                </div>
+                <h3 style="font-size: 1rem; color:#fff; margin-bottom: 5px;">1. Antes del TLC (Datos Brutos)</h3>
+                <p style="font-size:0.8rem; color:#64748b; margin-bottom: 10px;">Distribución original no normal de donde se extraen las muestras.</p>
+                <div class="chart-box">
+                    <canvas id="chartPop"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfica 2 -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span style="font-size:0.85rem; font-weight:bold; color:#38bdf8;">MEDIAS MUESTRALES (X̄)</span>
+                    <div style="display:flex; gap:6px;">
+                        <span class="badge-tag-highlight" id="badgeEmpSkew">Asimetría g₁: 0.38 [Sesgo Der.]</span>
+                        <span class="badge-tag-highlight" id="badgeEmpKurt">Curtosis g₂: 0.11 [Normal]</span>
+                    </div>
+                </div>
+                <h3 style="font-size: 1rem; color:#fff; margin-bottom: 5px;">2. Distribución Muestral de Medias (Efecto TLC)</h3>
+                <p style="font-size:0.8rem; color:#64748b; margin-bottom: 10px;">Histograma con la <strong>Campana de Gauss Teórica (verde)</strong> y líneas de <strong>Media (amarilla)</strong> y <strong>Límites TLC (rojo/verde)</strong>.</p>
+                <div class="chart-box">
+                    <canvas id="chartMeans"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Registrar plugin de anotaciones para líneas verticales
+        if (typeof ChartAnnotation !== 'undefined') {
+            Chart.register(ChartAnnotation);
+        }
+
+        let chartPopInstance = null;
+        let chartMeansInstance = null;
+        let animationTimer = null;
+
+        function generarPoblacion(tipo) {
+            let data = [];
+            for(let i = 0; i < 10000; i++) {
+                if(tipo === 'exponencial') data.push(-Math.log(1 - Math.random()));
+                else if(tipo === 'uniforme') data.push(Math.random() * 10);
+                else if(tipo === 'bimodal') data.push(Math.random() > 0.5 ? Math.random() * 2 : 8 + Math.random() * 2);
+                else if(tipo === 'dado') data.push(Math.floor(Math.random() * 6) + 1);
+            }
+            return data;
+        }
+
+        function normalPDF(x, mean, std) {
+            return (1 / (std * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / std, 2));
+        }
+
+        function calcMoments(data) {
+            const n = data.length;
+            const mean = data.reduce((a,b)=>a+b,0) / n;
+            const variance = data.reduce((a,b)=>a+Math.pow(b-mean,2),0) / n;
+            const std = Math.sqrt(variance);
+
+            const m3 = data.reduce((a,b)=>a+Math.pow(b-mean,3),0) / n;
+            const m4 = data.reduce((a,b)=>a+Math.pow(b-mean,4),0) / n;
+
+            const skewness = m3 / Math.pow(std, 3);
+            const kurtosis = (m4 / Math.pow(std, 4)) - 3;
+
+            return { mean, std, variance, skewness, kurtosis };
+        }
+
+        function createHistogramData(data, binsCount = 30) {
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const step = (max - min) / binsCount || 1;
+            let bins = new Array(binsCount).fill(0);
+            let labels = [];
+
+            for(let i = 0; i < binsCount; i++) {
+                labels.push((min + (i + 0.5) * step).toFixed(2));
+            }
+
+            data.forEach(val => {
+                let idx = Math.floor((val - min) / step);
+                if(idx >= binsCount) idx = binsCount - 1;
+                bins[idx]++;
+            });
+
+            return { labels, bins, step, min, max };
+        }
+
+        function simular() {
+            if(animationTimer) clearInterval(animationTimer);
+
+            const tipo = document.getElementById('distribucion').value;
+            const N = parseInt(document.getElementById('sampleN').value);
+            const K = parseInt(document.getElementById('sampleK').value);
+
+            const popData = generarPoblacion(tipo);
+            const popStats = calcMoments(popData);
+
+            // Muestreo
+            let means = [];
+            for(let i = 0; i < K; i++) {
+                let sum = 0;
+                for(let j = 0; j < N; j++) {
+                    sum += popData[Math.floor(Math.random() * popData.length)];
+                }
+                means.push(sum / N);
+            }
+
+            const meansStats = calcMoments(means);
+            const seTeorico = popStats.std / Math.sqrt(N);
+            const rangoInfTeorico = popStats.mean - 1.96 * seTeorico;
+            const rangoSupTeorico = popStats.mean + 1.96 * seTeorico;
+
+            // Actualizar Interfaz
+            document.getElementById('popMean').innerText = popStats.mean.toFixed(3);
+            document.getElementById('popStd').innerText = popStats.std.toFixed(3);
+            document.getElementById('popSkew').innerText = (popStats.skewness >= 0 ? '+' : '') + popStats.skewness.toFixed(2) + " (Sesgo Der.)";
+            document.getElementById('popKurt').innerText = (popStats.kurtosis >= 0 ? '+' : '') + popStats.kurtosis.toFixed(2) + " (Apuntada)";
+
+            document.getElementById('seTeorico').innerText = seTeorico.toFixed(3);
+            document.getElementById('seEmpirico').innerText = meansStats.std.toFixed(3);
+            document.getElementById('meanCompare').innerText = `${meansStats.mean.toFixed(3)} (Teórica μ: ${popStats.mean.toFixed(3)})`;
+            document.getElementById('rangoInf').innerText = `${(meansStats.mean - 1.96*meansStats.std).toFixed(3)} (Teórico: ${rangoInfTeorico.toFixed(3)})`;
+            document.getElementById('rangoSup').innerText = `${(meansStats.mean + 1.96*meansStats.std).toFixed(3)} (Teórico: ${rangoSupTeorico.toFixed(3)})`;
+
+            document.getElementById('empSkew').innerText = (meansStats.skewness >= 0 ? '+' : '') + meansStats.skewness.toFixed(2) + " (Sesgo Der.)";
+            document.getElementById('empKurt').innerText = (meansStats.kurtosis >= 0 ? '+' : '') + meansStats.kurtosis.toFixed(2) + " (Normal)";
+
+            document.getElementById('badgePopSkew').innerText = `Asimetría g₁: ${popStats.skewness.toFixed(2)}`;
+            document.getElementById('badgePopKurt').innerText = `Curtosis g₂: ${popStats.kurtosis.toFixed(2)}`;
+            document.getElementById('badgeEmpSkew').innerText = `Asimetría g₁: ${meansStats.skewness.toFixed(2)} [Sesgo Der.]`;
+            document.getElementById('badgeEmpKurt').innerText = `Curtosis g₂: ${meansStats.kurtosis.toFixed(2)} [Normal]`;
+
+            document.getElementById('demoText').innerHTML = `💡 <strong>Demostración Matemática del TLC (n = ${N} ${N>=30?'≥ 30':`< 30`}, K = ${K}):</strong> La media está centrada en μ = ${popStats.mean.toFixed(3)}. El 95% de las medias caen en el intervalo [${rangoInfTeorico.toFixed(3)}, ${rangoSupTeorico.toFixed(3)}]. Al aumentar K a 10,000, la curva empírica se amolda perfectamente a la Campana de Gauss teórica.`;
+
+            renderCharts(popData, means, popStats.mean, seTeorico, K, rangoInfTeorico, rangoSupTeorico);
+        }
+
+        function renderCharts(popData, meansData, mu, seTeorico, K, rInf, rSup) {
+            const popHist = createHistogramData(popData, 25);
+            const meansHist = createHistogramData(meansData, 30);
+
+            // Curva Teórica de Gauss Verde
+            const gaussLine = meansHist.labels.map(xStr => {
+                const x = parseFloat(xStr);
+                const pdf = normalPDF(x, mu, seTeorico);
+                return pdf * K * meansHist.step;
+            });
+
+            if(chartPopInstance) chartPopInstance.destroy();
+            if(chartMeansInstance) chartMeansInstance.destroy();
+
+            // Chart 1
+            const ctxPop = document.getElementById('chartPop').getContext('2d');
+            chartPopInstance = new Chart(ctxPop, {
+                type: 'bar',
+                data: {
+                    labels: popHist.labels,
+                    datasets: [{
+                        label: 'Datos Poblacionales',
+                        data: popHist.bins,
+                        backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                        borderColor: '#ef4444',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#64748b' } },
+                        y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b' } }
+                    }
+                }
+            });
+
+            // Buscar Índices exactos de etiquetas x para fijar las líneas verticales
+            function findClosestLabelIndex(targetVal) {
+                let closestIdx = 0;
+                let minDiff = Infinity;
+                meansHist.labels.forEach((labelStr, i) => {
+                    let diff = Math.abs(parseFloat(labelStr) - targetVal);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestIdx = i;
+                    }
+                });
+                return closestIdx;
+            }
+
+            const idxMean = findClosestLabelIndex(mu);
+            const idxInf = findClosestLabelIndex(rInf);
+            const idxSup = findClosestLabelIndex(rSup);
+
+            // Chart 2 con Gauss y Líneas Indicadoras Discontinuas Dinámicas (Alineadas en la parte superior)
+            const ctxMeans = document.getElementById('chartMeans').getContext('2d');
+
+            chartMeansInstance = new Chart(ctxMeans, {
+                data: {
+                    labels: meansHist.labels,
+                    datasets: [
+                        {
+                            type: 'line',
+                            label: 'Campana de Gauss Teórica (Normal)',
+                            data: gaussLine,
+                            borderColor: '#10b981',
+                            borderWidth: 2.5,
+                            fill: false,
+                            pointRadius: 0,
+                            tension: 0.4
+                        },
+                        {
+                            type: 'bar',
+                            label: 'Promedios Muestrales (Empírico)',
+                            data: meansHist.bins,
+                            backgroundColor: 'rgba(56, 189, 248, 0.7)',
+                            borderColor: '#38bdf8',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8' } },
+                        annotation: {
+                            annotations: {
+                                lineInf: {
+                                    type: 'line',
+                                    xMin: idxInf,
+                                    xMax: idxInf,
+                                    borderColor: '#ef4444',
+                                    borderWidth: 2,
+                                    borderDash: [4, 4],
+                                    label: {
+                                        display: true,
+                                        content: `Inf: ${rInf.toFixed(2)}`,
+                                        color: '#ef4444',
+                                        backgroundColor: 'rgba(15, 23, 42, 0.85)',
+                                        position: 'end', /* Mueve la etiqueta a la parte superior */
+                                        yAdjust: 10,
+                                        font: { size: 11, weight: 'bold' }
+                                    }
+                                },
+                                lineMean: {
+                                    type: 'line',
+                                    xMin: idxMean,
+                                    xMax: idxMean,
+                                    borderColor: '#f59e0b',
+                                    borderWidth: 2.5,
+                                    borderDash: [4, 4],
+                                    label: {
+                                        display: true,
+                                        content: `μ: ${mu.toFixed(2)}`,
+                                        color: '#f59e0b',
+                                        backgroundColor: 'rgba(15, 23, 42, 0.85)',
+                                        position: 'end', /* Mueve la etiqueta a la parte superior */
+                                        yAdjust: 10,
+                                        font: { size: 11, weight: 'bold' }
+                                    }
+                                },
+                                lineSup: {
+                                    type: 'line',
+                                    xMin: idxSup,
+                                    xMax: idxSup,
+                                    borderColor: '#10b981',
+                                    borderWidth: 2,
+                                    borderDash: [4, 4],
+                                    label: {
+                                        display: true,
+                                        content: `Sup: ${rSup.toFixed(2)}`,
+                                        color: '#10b981',
+                                        backgroundColor: 'rgba(15, 23, 42, 0.85)',
+                                        position: 'end', /* Mueve la etiqueta a la parte superior */
+                                        yAdjust: 10,
+                                        font: { size: 11, weight: 'bold' }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#64748b' } },
+                        y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b' } }
+                    }
+                }
+            });
+        }
+
+        function animarSimulacion() {
+            if(animationTimer) clearInterval(animationTimer);
+
+            const tipo = document.getElementById('distribucion').value;
+            const N = parseInt(document.getElementById('sampleN').value);
+            const K = parseInt(document.getElementById('sampleK').value);
+
+            const popData = generarPoblacion(tipo);
+            const popStats = calcMoments(popData);
+            const seTeorico = popStats.std / Math.sqrt(N);
+
+            let meansAcc = [];
+            let currentStep = 0;
+            const totalSteps = 25;
+            const stepSize = Math.max(1, Math.floor(K / totalSteps));
+
+            animationTimer = setInterval(() => {
+                currentStep += stepSize;
+                if(currentStep > K) currentStep = K;
+
+                for(let i = meansAcc.length; i < currentStep; i++) {
+                    let sum = 0;
+                    for(let j = 0; j < N; j++) {
+                        sum += popData[Math.floor(Math.random() * popData.length)];
+                    }
+                    meansAcc.push(sum / N);
+                }
+
+                const meansStats = calcMoments(meansAcc);
+
+                document.getElementById('seEmpirico').innerText = meansStats.std.toFixed(3);
+                document.getElementById('meanCompare').innerText = `${meansStats.mean.toFixed(3)} (Teórica μ: ${popStats.mean.toFixed(3)})`;
+                document.getElementById('empSkew').innerText = (meansStats.skewness >= 0 ? '+' : '') + meansStats.skewness.toFixed(2) + " (Sesgo Der.)";
+                document.getElementById('empKurt').innerText = (meansStats.kurtosis >= 0 ? '+' : '') + meansStats.kurtosis.toFixed(2) + " (Normal)";
+
+                renderCharts(popData, meansAcc, popStats.mean, seTeorico, meansAcc.length, popStats.mean - 1.96*seTeorico, popStats.mean + 1.96*seTeorico);
+
+                if(currentStep >= K) {
+                    clearInterval(animationTimer);
+                }
+            }, 80);
+        }
+
+        window.onload = simular;
+    </script>
+</body>
+</html>
