@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cuestionario: Recursos y Sistema Financiero</title>
   
-  <!-- Open Graph Meta Tags para vista previa profesional en WhatsApp y Redes Sociales -->
+  <!-- Open Graph Meta Tags para vista previa profesional en WhatsApp -->
   <meta property="og:title" content="Cuestionario: Recursos y Sistema Financiero">
   <meta property="og:description" content="Pone a prueba tus conocimientos sobre el sistema financiero con este cuestionario interactivo estilo Kahoot.">
   <meta property="og:image" content="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80">
@@ -89,7 +89,6 @@
       transform: scale(1.05);
     }
 
-    /* Question Screen */
     .header-quiz {
       display: flex;
       justify-content: space-between;
@@ -115,7 +114,7 @@
     }
 
     .question-title {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: bold;
       color: #222;
       margin-bottom: 30px;
@@ -141,7 +140,7 @@
       border: none;
       border-radius: 8px;
       padding: 20px;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: bold;
       color: white;
       cursor: pointer;
@@ -172,7 +171,6 @@
       margin-right: 15px;
     }
 
-    /* Feedback Screen */
     .feedback-title {
       font-size: 2rem;
       font-weight: bold;
@@ -187,33 +185,11 @@
       margin-bottom: 25px;
     }
 
-    /* Final Screen */
     .final-score {
       font-size: 3rem;
       font-weight: bold;
       color: #46178f;
       margin: 20px 0;
-    }
-
-    .leaderboard {
-      margin-top: 25px;
-      text-align: left;
-      background: #f8f9fa;
-      padding: 15px;
-      border-radius: 8px;
-    }
-
-    .leaderboard h3 {
-      margin-bottom: 10px;
-      color: #46178f;
-    }
-
-    .leaderboard ol {
-      padding-left: 20px;
-    }
-
-    .leaderboard li {
-      margin-bottom: 5px;
     }
   </style>
 </head>
@@ -224,14 +200,14 @@
     <!-- Pantalla Inicial -->
     <div id="start-screen" class="screen active">
       <h1>Cuestionario: Recursos y Sistema Financiero</h1>
-      <p>Demuestra tus conocimientos en esta prueba rápida de opción múltiple.</p>
+      <p>Demuestra tus conocimientos en este cuestionario de 25 preguntas estilo Kahoot.</p>
       <button class="btn-main" onclick="startQuiz()">Comenzar Cuestionario</button>
     </div>
 
     <!-- Pantalla de Pregunta -->
     <div id="quiz-screen" class="screen">
       <div class="header-quiz">
-        <span id="question-count">Pregunta 1 de 10</span>
+        <span id="question-count">Pregunta 1 de 25</span>
         <span id="score-count">Puntos: 0</span>
       </div>
       <div class="timer-bar">
@@ -277,113 +253,153 @@
     const questions = [
       {
         question: "¿Cuál es la función principal del sistema financiero?",
-        options: [
-          "Canalizar el ahorro hacia la inversión",
-          "Imprimir dinero de forma ilimitada",
-          "Cobrar impuestos a los ciudadanos",
-          "Regular los precios del mercado libre"
-        ],
+        options: ["Canalizar el ahorro hacia la inversión", "Imprimir dinero de forma ilimitada", "Cobrar impuestos a los ciudadanos", "Regular los precios del mercado libre"],
         correct: 0,
         explanation: "El sistema financiero conecta a los ahorradores con los inversionistas para dinamizar la economía."
       },
       {
         question: "¿Qué entidad suele actuar como el regulador central de la moneda y la banca?",
-        options: [
-          "La Bolsa de Valores",
-          "El Banco Central",
-          "El Ministerio de Educación",
-          "El Fondo de Inversión Privado"
-        ],
+        options: ["La Bolsa de Valores", "El Banco Central", "El Ministerio de Educación", "El Fondo de Inversión Privado"],
         correct: 1,
         explanation: "El Banco Central emite la moneda nacional y supervisa las políticas monetarias."
       },
       {
         question: "¿Qué representa un activo financiero?",
-        options: [
-          "Un bien físico indispensable para la producción",
-          "Un título o derecho intangible a recibir ingresos futuros",
-          "Una deuda que no requiere ser saldada",
-          "El inventario físico retenido en un almacén"
-        ],
+        options: ["Un bien físico indispensable para la producción", "Un título o derecho intangible a recibir ingresos futuros", "Una deuda que no requiere ser saldada", "El inventario físico retenido en un almacén"],
         correct: 1,
         explanation: "Los activos financieros otorgan a su comprador el derecho a recibir ingresos futuros del vendedor."
       },
       {
         question: "¿Cuál de los siguientes es un instrumento del mercado monetario?",
-        options: [
-          "Acciones ordinarias a largo plazo",
-          "Letras del Tesoro a corto plazo",
-          "Bienes inmuebles comerciales",
-          "Contratos de trabajo indefinidos"
-        ],
+        options: ["Acciones ordinarias a largo plazo", "Letras del Tesoro a corto plazo", "Bienes inmuebles comerciales", "Contratos de trabajo indefinidos"],
         correct: 1,
         explanation: "El mercado monetario transa instrumentos de deuda de muy alto nivel de liquidez y corto plazo."
       },
       {
         question: "¿Qué es el riesgo de crédito?",
-        options: [
-          "El riesgo de que una moneda pierda valor por inflación",
-          "La posibilidad de que un prestatario no cumpla con sus pagos",
-          "El peligro de no poder vender un activo rápidamente",
-          "La fluctuación diaria en los tipos de cambio de divisas"
-        ],
+        options: ["El riesgo de que una moneda pierda valor por inflación", "La posibilidad de que un prestatario no cumpla con sus pagos", "El peligro de no poder vender un activo rápidamente", "La fluctuación diaria en los tipos de cambio de divisas"],
         correct: 1,
         explanation: "El riesgo crediticio surge ante el posible incumplimiento de las obligaciones contractuales de pago."
       },
       {
         question: "¿Qué diferencia principal existe entre acciones y bonos?",
-        options: [
-          "Las acciones representan deuda y los bonos propiedad",
-          "Las acciones otorgan propiedad parcial y los bonos son instrumentos de deuda",
-          "Los bonos no pagan intereses bajo ninguna circunstancia",
-          "Las acciones garantizan un rendimiento fijo e inalterable"
-        ],
+        options: ["Las acciones representan deuda y los bonos propiedad", "Las acciones otorgan propiedad parcial y los bonos son instrumentos de deuda", "Los bonos no pagan intereses bajo ninguna circunstancia", "Las acciones garantizan un rendimiento fijo e inalterable"],
         correct: 1,
         explanation: "Al comprar acciones adquieres parte de la empresa; al comprar bonos le prestas dinero a una entidad."
       },
       {
         question: "¿Qué es la inflación?",
-        options: [
-          "El aumento generalizado y sostenido de los precios",
-          "La disminución progresiva del costo de la canasta básica",
-          "El crecimiento constante de las reservas bancarias",
-          "El valor exacto de cambio entre dos monedas internacionales"
-        ],
+        options: ["El aumento generalizado y sostenido de los precios", "La disminución progresiva del costo de la canasta básica", "El crecimiento constante de las reservas bancarias", "El valor exacto de cambio entre dos monedas internacionales"],
         correct: 0,
         explanation: "La inflación reduce el poder adquisitivo de la moneda a lo largo del tiempo."
       },
       {
         question: "¿Qué función cumple la tasa de interés en un préstamo?",
-        options: [
-          "Es una multa cobrada por mora bancaria",
-          "Es el precio por el uso del dinero prestado a lo largo del tiempo",
-          "Es la comisión única de apertura del trámite",
-          "Es el impuesto gubernamental sobre las transacciones"
-        ],
+        options: ["Es una multa cobrada por mora bancaria", "Es el precio por el uso del dinero prestado a lo largo del tiempo", "Es la comisión única de apertura del trámite", "Es el impuesto gubernamental sobre las transacciones"],
         correct: 1,
         explanation: "La tasa de interés representa el costo del dinero solicitado o el rendimiento del capital guardado."
       },
       {
         question: "¿Qué caracteriza a un fondo de inversión?",
-        options: [
-          "Su patrimonio pertenece a un único inversionista mayoritario",
-          "Reúne el dinero de múltiples inversionistas para diversificar",
-          "Solo invierte en propiedades inmuebles nacionales",
-          "Garantiza duplicar el capital aportado en un mes"
-        ],
+        options: ["Su patrimonio pertenece a un único inversionista mayoritario", "Reúne el dinero de múltiples inversionistas para diversificar", "Solo invierte en propiedades inmuebles nacionales", "Garantiza duplicar el capital aportado en un mes"],
         correct: 1,
         explanation: "Los fondos de inversión permiten a pequeños y medianos ahorradores acceder a carteras diversificadas."
       },
       {
         question: "¿Qué representa la liquidez de un activo?",
-        options: [
-          "La facilidad con la que se puede convertir en efectivo sin perder valor",
-          "La rentabilidad total porcentual entregada al cabo de un año",
-          "El nivel de riesgo fiscal asociado al instrumento bancario",
-          "La cantidad física de billetes impresos por el estado"
-        ],
+        options: ["La facilidad con la que se puede convertir en efectivo sin perder valor", "La rentabilidad total porcentual entregada al cabo de un año", "El nivel de riesgo fiscal asociado al instrumento bancario", "La cantidad física de billetes impresos por el estado"],
         correct: 0,
         explanation: "Un activo es muy líquido si se puede vender o transformar rápidamente en dinero efectivo."
+      },
+      {
+        question: "¿Qué es la tasa de encaje legal exigida a los bancos comerciales?",
+        options: ["El porcentaje de depósitos que las instituciones deben mantener en reserva", "El impuesto fijo aplicado a las ganancias anuales del banco", "La tasa máxima cobrada por créditos hipotecarios", "El límite máximo de dinero permitido en cajeros automáticos"],
+        correct: 0,
+        explanation: "El encaje legal es una reserva obligatoria que los bancos deben mantener depositada como garantía de solvencia."
+      },
+      {
+        question: "¿Cuál es el rol principal de la Bolsa de Valores?",
+        options: ["Fijar los salarios de los ejecutivos corporativos", "Facilitar la negociación de títulos valores entre compradores y vendedores", "Otorgar subsidios a pequeñas empresas en quiebra", "Aprobar el presupuesto anual emitido por el Estado"],
+        correct: 1,
+        explanation: "La Bolsa es un mercado organizado que conecta la oferta y demanda de instrumentos financieros."
+      },
+      {
+        question: "¿Qué es un derivado financiero?",
+        options: ["Un tipo de moneda física emitida por bancos regionales", "Un instrumento cuyo valor depende del precio de otro activo subyacente", "Una cuenta de ahorros libre de impuestos", "Un préstamo directo entre dos personas particulares"],
+        correct: 1,
+        explanation: "Su valor proviene o se deriva de activos subyacentes como acciones, materias primas o tasas."
+      },
+      {
+        question: "¿A qué se refiere el término 'Diversificación' en inversiones?",
+        options: ["Invertir todo el capital disponible en un solo producto estrella", "Repartir el capital entre distintos activos para reducir el riesgo", "Cambiar de banco distribuidor cada mes", "Retirar todas las ganancias obtenidas en efectivo"],
+        correct: 1,
+        explanation: "Diversificar minimiza el impacto negativo que la caída de un activo individual tendría sobre la cartera."
+      },
+      {
+        question: "¿Qué es el Mercado Primario de valores?",
+        options: ["Donde se negocian títulos emitidos e intercambiados previamente", "Donde se venden por primera vez títulos recién emitidos", "Un mercado exclusivo para la compra de materias primas", "El espacio reservado para transacciones entre particulares"],
+        correct: 1,
+        explanation: "En el mercado primario las entidades emisoras captan capital nuevo vendiendo títulos por primera vez."
+      },
+      {
+        question: "¿Qué distingue al Mercado Secundario de valores?",
+        options: ["Permite la reventa y negociación de títulos ya existentes", "Es donde el gobierno compra divisas directamente", "Solo opera con criptomonedas y activos digitales", "Es exclusivo para préstamos de consumo a corto plazo"],
+        correct: 0,
+        explanation: "El mercado secundario otorga liquidez a los inversionistas para vender títulos adquiridos previamente."
+      },
+      {
+        question: "¿Qué es un dividendo?",
+        options: ["La comisión cobrada por el corredor de bolsa", "La parte de las ganancias que una empresa distribuye a sus accionistas", "El pago de un interés fijo por la emisión de un bono", "La penalización aplicada a una empresa con pérdidas"],
+        correct: 1,
+        explanation: "Los dividendos representan la retribución económica enviada a los propietarios de acciones."
+      },
+      {
+        question: "¿Qué es la Política Monetaria?",
+        options: ["El conjunto de acciones del Banco Central para gestionar la cantidad de dinero y la tasa de interés", "La gestión gubernamental sobre la recaudación de impuestos directos", "El control estricto de precios en supermercados locales", "La estrategia de contratación de personal en el sector bancario"],
+        correct: 0,
+        explanation: "La política monetaria busca controlar la inflación y mantener la estabilidad económica del país."
+      },
+      {
+        question: "¿Qué significa que un bono cotice 'bajo par'?",
+        options: ["Que se vende a un precio inferior a su valor nominal", "Que cotiza exactamente igual a su valor de emisión", "Que su tasa de rendimiento anual es igual a cero", "Que no pagará intereses durante el periodo actual"],
+        correct: 0,
+        explanation: "Un bono cotiza bajo par cuando su precio en el mercado cae por debajo del valor nominal asignado."
+      },
+      {
+        question: "¿Qué mide la Tasa Interna de Retorno (TIR)?",
+        options: ["La tasa de descuento que hace que el Valor Presente Neto (VPN) sea igual a cero", "El porcentaje exacto recaudado por impuestos corporativos", "El tiempo total necesario para recuperar el dinero invertido", "La comisión fija pagada al administrador del proyecto"],
+        correct: 0,
+        explanation: "La TIR indica la rentabilidad porcentual promedio estimada de un proyecto de inversión."
+      },
+      {
+        question: "¿Qué se entiende por 'Riesgo de Liquidez'?",
+        options: ["Incapacidad de vender un activo a tiempo sin asumir una pérdida sustancial de precio", "La pérdida de valor provocada por variaciones de tipo de cambio", "La quiebra definitiva de la entidad garante del instrumento", "La probabilidad de cambios desfavorables en la tasa de interés"],
+        correct: 0,
+        explanation: "Ocurre cuando no hay compradores inmediatos en el mercado para convertir el activo en efectivo."
+      },
+      {
+        question: "¿Qué rol cumple una Sociedad Calificadora de Riesgo?",
+        options: ["Evaluar la capacidad de pago y riesgo crediticio de los emisores de títulos", "Prestar dinero de emergencia a instituciones financieras", "Establecer la tasa de inflación objetivo para el siguiente trimestre", "Supervisar las transferencias bancarias de personas naturales"],
+        correct: 0,
+        explanation: "Emiten notas o calificaciones para informar al mercado sobre la solvencia y riesgo de los emisores."
+      },
+      {
+        question: "¿Qué es el Valor Presente Neto (VPN)?",
+        options: ["La suma de los flujos de caja futuros descontados al momento actual menos la inversión inicial", "El valor comercial del edificio sede del banco central", "El saldo contable disponible al cierre de la jornada de operaciones", "El interés acumulado cobrado al finalizar un préstamo a largo plazo"],
+        correct: 0,
+        explanation: "El VPN permite determinar si una inversión generará ganancias o pérdidas en términos del dinero de hoy."
+      },
+      {
+        question: "¿Qué es el apalancamiento financiero?",
+        options: ["Utilizar deuda para financiar una operación e intentar aumentar la rentabilidad", "Consolidar todas las deudas en un solo pago mensual", "Invertir exclusivamente con recursos propios sobrantes", "La eliminación total de los costos operativos en una empresa"],
+        correct: 0,
+        explanation: "El apalancamiento incrementa las ganancias potenciales pero también multiplica el riesgo de pérdidas."
+      },
+      {
+        question: "¿Qué es el tipo de cambio nominal?",
+        options: ["El precio relativo de una moneda expresado en términos de otra moneda", "La tasa de inflación descontada de los rendimientos bancarios", "El costo adicional cobrado por el uso de cajeros internacionales", "La diferencia matemática entre las tasas de interés de dos países"],
+        correct: 0,
+        explanation: "Indica cuántas unidades de una moneda local se necesitan para comprar una unidad de moneda extranjera."
       }
     ];
 
@@ -429,7 +445,7 @@
 
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          selectOption(-1); // Tiempo agotado
+          selectOption(-1);
         }
       }, 1000);
     }
