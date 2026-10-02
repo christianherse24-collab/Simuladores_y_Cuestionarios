@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cuestionario: Recursos y Sistema Financiero</title>
   
-  <!-- Open Graph Meta Tags para vista previa profesional en WhatsApp -->
+  <!-- Open Graph Meta Tags para vista previa en WhatsApp -->
   <meta property="og:title" content="Cuestionario: Recursos y Sistema Financiero">
   <meta property="og:description" content="Pone a prueba tus conocimientos sobre el sistema financiero con este cuestionario interactivo estilo Kahoot.">
   <meta property="og:image" content="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80">
@@ -37,19 +37,58 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 20px;
+      padding: 15px;
     }
 
     .quiz-container {
       background-color: var(--card-bg);
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
       width: 100%;
-      max-width: 800px;
-      padding: 30px;
+      max-width: 600px;
+      padding: 25px;
       text-align: center;
       position: relative;
-      overflow: hidden;
+    }
+
+    .top-kahoot-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .kahoot-badge {
+      background-color: #ffffff;
+      color: #46178f;
+      font-weight: 900;
+      font-size: 1.4rem;
+      padding: 6px 16px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .timer-pill {
+      background-color: #ffc200;
+      color: #000;
+      font-weight: 800;
+      font-size: 0.9rem;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .sound-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
     }
 
     .screen {
@@ -62,103 +101,106 @@
 
     h1 {
       color: #46178f;
-      margin-bottom: 20px;
-      font-size: 2.2rem;
+      margin-bottom: 15px;
+      font-size: 1.8rem;
     }
 
     p {
-      margin-bottom: 25px;
-      font-size: 1.1rem;
-      color: #666;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      color: #555;
     }
 
     .btn-main {
       background-color: #46178f;
       color: white;
       border: none;
-      padding: 15px 40px;
-      font-size: 1.2rem;
+      padding: 15px 35px;
+      font-size: 1.1rem;
       font-weight: bold;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: transform 0.2s, background-color 0.2s;
+      width: 100%;
+      box-shadow: 0 4px 0 #2a0e5a;
     }
 
-    .btn-main:hover {
-      background-color: #33106a;
-      transform: scale(1.05);
-    }
-
-    .header-quiz {
+    .quiz-info-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-      font-weight: bold;
-      color: #666;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #46178f;
+      margin-bottom: 12px;
     }
 
-    .timer-bar {
-      height: 10px;
-      background-color: #e0e0e0;
-      border-radius: 5px;
-      margin-bottom: 25px;
+    .timer-badge-inline {
+      background-color: #f3f0f9;
+      padding: 4px 10px;
+      border-radius: 10px;
+      color: #d89e00;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .score-badge-inline {
+      color: #26890c;
+    }
+
+    .progress-track {
+      height: 12px;
+      background-color: #e5deef;
+      border-radius: 6px;
+      margin-bottom: 20px;
       overflow: hidden;
     }
 
-    .timer-progress {
+    .progress-bar {
       height: 100%;
-      background-color: #46178f;
+      background-color: #d89e00;
       width: 100%;
       transition: width 1s linear;
     }
 
-    .question-title {
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: #222;
-      margin-bottom: 30px;
-      min-height: 60px;
+    .question-card {
+      background-color: #ffffff;
+      border: 2px solid #e5deef;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      min-height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .options-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
+    .question-card h2 {
+      color: #111111;
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1.4;
     }
 
-    @media (max-width: 600px) {
-      .options-grid {
-        grid-template-columns: 1fr;
-      }
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     .option-btn {
       border: none;
-      border-radius: 8px;
-      padding: 20px;
-      font-size: 1rem;
-      font-weight: bold;
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 0.95rem;
+      font-weight: 700;
       color: white;
       cursor: pointer;
       display: flex;
       align-items: center;
       text-align: left;
-      transition: opacity 0.2s, transform 0.1s;
+      line-height: 1.3;
       box-shadow: 0 4px 0 rgba(0,0,0,0.2);
-    }
-
-    .option-btn:hover {
-      opacity: 0.9;
-      transform: translateY(-2px);
-    }
-
-    .option-btn:active {
-      transform: translateY(2px);
-      box-shadow: none;
     }
 
     .opt-0 { background-color: var(--red); }
@@ -167,246 +209,385 @@
     .opt-3 { background-color: var(--green); }
 
     .option-shape {
-      font-size: 1.4rem;
-      margin-right: 15px;
+      font-size: 1.2rem;
+      margin-right: 12px;
+      flex-shrink: 0;
     }
 
     .feedback-title {
-      font-size: 2rem;
-      font-weight: bold;
+      font-size: 1.8rem;
+      font-weight: 800;
       margin-bottom: 15px;
     }
 
     .correct-text { color: #26890c; }
     .incorrect-text { color: #e21b3c; }
 
-    .score-display {
-      font-size: 1.3rem;
-      margin-bottom: 25px;
-    }
-
     .final-score {
-      font-size: 3rem;
-      font-weight: bold;
+      font-size: 2.8rem;
+      font-weight: 900;
       color: #46178f;
-      margin: 20px 0;
+      margin: 15px 0;
     }
   </style>
 </head>
 <body>
 
-  <div class="quiz-container">
+  <div style="width: 100%; max-width: 600px;">
     
-    <!-- Pantalla Inicial -->
-    <div id="start-screen" class="screen active">
-      <h1>Cuestionario: Recursos y Sistema Financiero</h1>
-      <p>Demuestra tus conocimientos en este cuestionario de 25 preguntas estilo Kahoot.</p>
-      <button class="btn-main" onclick="startQuiz()">Comenzar Cuestionario</button>
-    </div>
-
-    <!-- Pantalla de Pregunta -->
-    <div id="quiz-screen" class="screen">
-      <div class="header-quiz">
-        <span id="question-count">Pregunta 1 de 25</span>
-        <span id="score-count">Puntos: 0</span>
+    <!-- Barra superior morada Kahoot -->
+    <div class="top-kahoot-bar">
+      <div class="kahoot-badge">
+        Kahoot! <span class="timer-pill">23s</span>
       </div>
-      <div class="timer-bar">
-        <div id="timer-progress" class="timer-progress"></div>
+      <button class="sound-btn">🔊</button>
+    </div>
+
+    <div class="quiz-container">
+      
+      <!-- Pantalla Inicio -->
+      <div id="start-screen" class="screen active">
+        <h1>Cuestionario: Recursos y Sistema Financiero</h1>
+        <p>Prueba interactiva de 25 preguntas sobre el sistema financiero.</p>
+        <button class="btn-main" onclick="startQuiz()">Comenzar Cuestionario</button>
       </div>
-      <div id="question-title" class="question-title">Cargando pregunta...</div>
-      <div class="options-grid">
-        <button class="option-btn opt-0" onclick="selectOption(0)">
-          <span class="option-shape">▲</span> <span id="opt-text-0">Opción 1</span>
-        </button>
-        <button class="option-btn opt-1" onclick="selectOption(1)">
-          <span class="option-shape">◆</span> <span id="opt-text-1">Opción 2</span>
-        </button>
-        <button class="option-btn opt-2" onclick="selectOption(2)">
-          <span class="option-shape">●</span> <span id="opt-text-2">Opción 3</span>
-        </button>
-        <button class="option-btn opt-3" onclick="selectOption(3)">
-          <span class="option-shape">■</span> <span id="opt-text-3">Opción 4</span>
-        </button>
+
+      <!-- Pantalla Pregunta -->
+      <div id="quiz-screen" class="screen">
+        <div class="quiz-info-bar">
+          <span id="question-count">Pregunta 1 de 25</span>
+          <span class="timer-badge-inline">⏱ <span id="time-left-num">15s</span></span>
+          <span class="score-badge-inline" id="score-count">0 Pts</span>
+        </div>
+
+        <div class="progress-track">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+
+        <div class="question-card">
+          <h2 id="question-title">Cargando...</h2>
+        </div>
+
+        <div class="options-grid">
+          <button class="option-btn opt-0" onclick="selectOption(0)">
+            <span class="option-shape">▲</span> <span id="opt-text-0">--</span>
+          </button>
+          <button class="option-btn opt-1" onclick="selectOption(1)">
+            <span class="option-shape">◆</span> <span id="opt-text-1">--</span>
+          </button>
+          <button class="option-btn opt-2" onclick="selectOption(2)">
+            <span class="option-shape">●</span> <span id="opt-text-2">--</span>
+          </button>
+          <button class="option-btn opt-3" onclick="selectOption(3)">
+            <span class="option-shape">■</span> <span id="opt-text-3">--</span>
+          </button>
+        </div>
       </div>
-    </div>
 
-    <!-- Pantalla de Retroalimentación Intermedia -->
-    <div id="feedback-screen" class="screen">
-      <div id="feedback-title" class="feedback-title">¡Correcto!</div>
-      <p id="feedback-detail"></p>
-      <div class="score-display">Puntuación actual: <strong id="current-score">0</strong></div>
-      <button class="btn-main" onclick="nextQuestion()">Siguiente Pregunta</button>
-    </div>
+      <!-- Pantalla Retroalimentación -->
+      <div id="feedback-screen" class="screen">
+        <div id="feedback-title" class="feedback-title">¡Respuesta Registrada!</div>
+        <p id="feedback-detail"></p>
+        <p>Puntuación acumulada: <strong id="current-score">0</strong> Pts</p>
+        <br>
+        <button class="btn-main" onclick="nextQuestion()">Siguiente Pregunta</button>
+      </div>
 
-    <!-- Pantalla Final -->
-    <div id="result-screen" class="screen">
-      <h1>¡Cuestionario Completado!</h1>
-      <p>Tu puntuación final es:</p>
-      <div id="final-score" class="final-score">0</div>
-      <p id="final-message">¡Buen trabajo!</p>
-      <button class="btn-main" onclick="restartQuiz()">Intentar de Nuevo</button>
-    </div>
+      <!-- Pantalla Resultado Final -->
+      <div id="result-screen" class="screen">
+        <h1>¡Finalizado!</h1>
+        <p>Tu puntuación total es:</p>
+        <div id="final-score" class="final-score">0</div>
+        <p id="final-message">¡Excelente trabajo!</p>
+        <button class="btn-main" onclick="restartQuiz()">Volver a intentar</button>
+      </div>
 
+    </div>
   </div>
 
   <script>
     const questions = [
       {
+        question: "¿Cómo se clasifican los recursos financieros según su origen de contratación o generación dentro o fuera del territorio nacional?",
+        options: [
+          "Recursos Financieros Internos y Recursos Financieros Externos",
+          "Dinero Primario y Dinero Secundario",
+          "Activos Líquidos y Activos Fijos",
+          "Capital Regulado y Capital No Regulado"
+        ],
+        correct: 0,
+        explanation: "Se dividen en internos (generados dentro del país) y externos (provenientes del exterior)."
+      },
+      {
         question: "¿Cuál es la función principal del sistema financiero?",
-        options: ["Canalizar el ahorro hacia la inversión", "Imprimir dinero de forma ilimitada", "Cobrar impuestos a los ciudadanos", "Regular los precios del mercado libre"],
+        options: [
+          "Imprimir billetes sin límite",
+          "Canalizar el ahorro hacia la inversión",
+          "Cobrar comisiones de mantenimiento",
+          "Fijar el costo de la canasta básica"
+        ],
+        correct: 1,
+        explanation: "Conecta a los agentes con superávit (ahorramientos) con aquellos con déficit (inversión)."
+      },
+      {
+        question: "¿Qué entidad supervisa y regula la política monetaria en el país?",
+        options: [
+          "La Bolsa de Valores",
+          "El Banco Central / Junta Monetaria",
+          "El Ministerio de Trabajo",
+          "Los Bancos Comerciales Privados"
+        ],
+        correct: 1,
+        explanation: "El Banco Central vela por la estabilidad de la moneda y la regulación financiera."
+      },
+      {
+        question: "¿Qué se entiende por Dinero Primario?",
+        options: [
+          "El dinero generado por los créditos de bancos privados",
+          "La emisión monetaria realizada directamente por el Banco Central",
+          "Los cheques y tarjetas de crédito",
+          "Las criptomonedas en circulación"
+        ],
+        correct: 1,
+        explanation: "El dinero primario o base monetaria es emitido directamente por el instituto emisor."
+      },
+      {
+        question: "¿Qué es el Encaje Legal?",
+        options: [
+          "Un impuesto aplicado a las ganancias bancarias",
+          "El porcentaje de depósitos que los bancos deben mantener retenido en reserva",
+          "La tasa de interés máxima para préstamos hipotecarios",
+          "La comisión cobrada por el uso de cajeros"
+        ],
+        correct: 1,
+        explanation: "El encaje legal garantiza la liquidez y solvencia del sistema bancario."
+      },
+      {
+        question: "¿Qué son los activos financieros?",
+        options: [
+          "Bienes físicos como maquinaria y vehículos",
+          "Títulos intangibles que otorgan derecho a recibir ingresos futuros",
+          "Monedas antiguas de colección",
+          "Deudas incobrables por parte del banco"
+        ],
+        correct: 1,
+        explanation: "Son títulos que representan un crédito o derecho de cobro."
+      },
+      {
+        question: "¿Qué diferencia a los bonos de las acciones?",
+        options: [
+          "Las acciones son instrumentos de deuda y los bonos de propiedad",
+          "Los bonos representan deuda y las acciones representan participación en el capital",
+          "Los bonos no generan ningún rendimiento",
+          "Las acciones solo las emite el Estado"
+        ],
+        correct: 1,
+        explanation: "El bono es un préstamo que realizas; la acción te vuelve copropietario de la empresa."
+      },
+      {
+        question: "¿Qué es el Mercado Monetario?",
+        options: [
+          "Aquel donde se negocian activos a corto plazo de alta liquidez",
+          "El mercado exclusivo de inmuebles y propiedades",
+          "Donde se compran acciones a largo plazo",
+          "La feria física de intercambio de divisas"
+        ],
         correct: 0,
-        explanation: "El sistema financiero conecta a los ahorradores con los inversionistas para dinamizar la economía."
+        explanation: "El mercado monetario se enfoca en instrumentos de deuda a corto plazo."
       },
       {
-        question: "¿Qué entidad suele actuar como el regulador central de la moneda y la banca?",
-        options: ["La Bolsa de Valores", "El Banco Central", "El Ministerio de Educación", "El Fondo de Inversión Privado"],
+        question: "¿Qué es el Mercado de Capitales?",
+        options: [
+          "Donde se realizan intercambios directos sin dinero de por medio",
+          "Mercado financiado a mediano y largo plazo (acciones y bonos de largo plazo)",
+          "El sistema de pagos de facturas de servicios",
+          "El cobro de impuestos por parte del Estado"
+        ],
         correct: 1,
-        explanation: "El Banco Central emite la moneda nacional y supervisa las políticas monetarias."
+        explanation: "Se utiliza para financiar inversiones de mediano y largo plazo."
       },
       {
-        question: "¿Qué representa un activo financiero?",
-        options: ["Un bien físico indispensable para la producción", "Un título o derecho intangible a recibir ingresos futuros", "Una deuda que no requiere ser saldada", "El inventario físico retenido en un almacén"],
+        question: "¿Qué indica la Liquidez de un instrumento financiero?",
+        options: [
+          "El color y estado físico de un billete",
+          "La rapidez con la que se convierte en efectivo sin perder valor",
+          "El porcentaje de impuestos que requiere pagar",
+          "La antigüedad de la institución emisora"
+        ],
         correct: 1,
-        explanation: "Los activos financieros otorgan a su comprador el derecho a recibir ingresos futuros del vendedor."
+        explanation: "Un activo es más líquido cuanto más rápido se puede transformar en dinero disponible."
       },
       {
-        question: "¿Cuál de los siguientes es un instrumento del mercado monetario?",
-        options: ["Acciones ordinarias a largo plazo", "Letras del Tesoro a corto plazo", "Bienes inmuebles comerciales", "Contratos de trabajo indefinidos"],
+        question: "¿A qué se refiere la Tasa de Interés Pasiva?",
+        options: [
+          "La tasa que cobran los bancos al otorgar préstamos",
+          "La tasa que pagan los bancos a los ahorrantes por sus depósitos",
+          "El impuesto por mora crediticia",
+          "La comisión cobrada por transferencias internacionales"
+        ],
         correct: 1,
-        explanation: "El mercado monetario transa instrumentos de deuda de muy alto nivel de liquidez y corto plazo."
+        explanation: "La pasiva es la que recibe el cliente que deposita su dinero en el banco."
       },
       {
-        question: "¿Qué es el riesgo de crédito?",
-        options: ["El riesgo de que una moneda pierda valor por inflación", "La posibilidad de que un prestatario no cumpla con sus pagos", "El peligro de no poder vender un activo rápidamente", "La fluctuación diaria en los tipos de cambio de divisas"],
-        correct: 1,
-        explanation: "El riesgo crediticio surge ante el posible incumplimiento de las obligaciones contractuales de pago."
-      },
-      {
-        question: "¿Qué diferencia principal existe entre acciones y bonos?",
-        options: ["Las acciones representan deuda y los bonos propiedad", "Las acciones otorgan propiedad parcial y los bonos son instrumentos de deuda", "Los bonos no pagan intereses bajo ninguna circunstancia", "Las acciones garantizan un rendimiento fijo e inalterable"],
-        correct: 1,
-        explanation: "Al comprar acciones adquieres parte de la empresa; al comprar bonos le prestas dinero a una entidad."
-      },
-      {
-        question: "¿Qué es la inflación?",
-        options: ["El aumento generalizado y sostenido de los precios", "La disminución progresiva del costo de la canasta básica", "El crecimiento constante de las reservas bancarias", "El valor exacto de cambio entre dos monedas internacionales"],
+        question: "¿A qué se refiere la Tasa de Interés Activa?",
+        options: [
+          "La tasa que cobran las entidades financieras a quienes les prestan dinero",
+          "La ganancia entregada en las cuentas de ahorro",
+          "El costo de impresión de la moneda",
+          "El descuento de la canasta básica"
+        ],
         correct: 0,
-        explanation: "La inflación reduce el poder adquisitivo de la moneda a lo largo del tiempo."
+        explanation: "Es la tasa que el banco cobra por otorgar créditos y financiamientos."
       },
       {
-        question: "¿Qué función cumple la tasa de interés en un préstamo?",
-        options: ["Es una multa cobrada por mora bancaria", "Es el precio por el uso del dinero prestado a lo largo del tiempo", "Es la comisión única de apertura del trámite", "Es el impuesto gubernamental sobre las transacciones"],
+        question: "¿Qué es el Margen Financiero o Intermediación Financiera?",
+        options: [
+          "La diferencia entre la Tasa Activa y la Tasa Pasiva",
+          "El saldo total de dólares en el Banco Central",
+          "El precio del oro en la Bolsa",
+          "La suma de los salarios de los empleados bancarios"
+        ],
+        correct: 0,
+        explanation: "Es la ganancia del banco por la diferencia entre lo que cobra y lo que paga de interés."
+      },
+      {
+        question: "¿Qué es el Riesgo Crediticio?",
+        options: [
+          "El riesgo de que la moneda se devalúe",
+          "La posibilidad de que un deudor no pague su obligación",
+          "El aumento de tasas por decisión del gobierno",
+          "El fallo informático en las bancas en línea"
+        ],
         correct: 1,
-        explanation: "La tasa de interés representa el costo del dinero solicitado o el rendimiento del capital guardado."
+        explanation: "Ocurre cuando el prestatario no cumple con las cuotas acordadas."
       },
       {
-        question: "¿Qué caracteriza a un fondo de inversión?",
-        options: ["Su patrimonio pertenece a un único inversionista mayoritario", "Reúne el dinero de múltiples inversionistas para diversificar", "Solo invierte en propiedades inmuebles nacionales", "Garantiza duplicar el capital aportado en un mes"],
+        question: "¿Qué representa la Inflación?",
+        options: [
+          "El aumento generalizado y continuo del nivel de precios",
+          "El aumento en la producción agrícola de un país",
+          "La caída constante de los salarios mínimos",
+          "La devaluación obligatoria del dólar estadounidense"
+        ],
+        correct: 0,
+        explanation: "La inflación destruye paulatinamente el poder de compra del dinero."
+      },
+      {
+        question: "¿Qué es la Deflación?",
+        options: [
+          "La subida descontrolada de precios",
+          "La baja generalizada y prolongada del nivel de precios",
+          "La escasez de papel para imprimir billetes",
+          "El aumento masivo de impuestos al consumo"
+        ],
         correct: 1,
-        explanation: "Los fondos de inversión permiten a pequeños y medianos ahorradores acceder a carteras diversificadas."
+        explanation: "Es el fenómeno contrario a la inflación, los precios disminuyen en promedio."
       },
       {
-        question: "¿Qué representa la liquidez de un activo?",
-        options: ["La facilidad con la que se puede convertir en efectivo sin perder valor", "La rentabilidad total porcentual entregada al cabo de un año", "El nivel de riesgo fiscal asociado al instrumento bancario", "La cantidad física de billetes impresos por el estado"],
-        correct: 0,
-        explanation: "Un activo es muy líquido si se puede vender o transformar rápidamente en dinero efectivo."
-      },
-      {
-        question: "¿Qué es la tasa de encaje legal exigida a los bancos comerciales?",
-        options: ["El porcentaje de depósitos que las instituciones deben mantener en reserva", "El impuesto fijo aplicado a las ganancias anuales del banco", "La tasa máxima cobrada por créditos hipotecarios", "El límite máximo de dinero permitido en cajeros automáticos"],
-        correct: 0,
-        explanation: "El encaje legal es una reserva obligatoria que los bancos deben mantener depositada como garantía de solvencia."
-      },
-      {
-        question: "¿Cuál es el rol principal de la Bolsa de Valores?",
-        options: ["Fijar los salarios de los ejecutivos corporativos", "Facilitar la negociación de títulos valores entre compradores y vendedores", "Otorgar subsidios a pequeñas empresas en quiebra", "Aprobar el presupuesto anual emitido por el Estado"],
+        question: "¿Qué es un Mercado Secundario?",
+        options: [
+          "Donde se emiten los títulos valores por primera vez",
+          "Donde se revenden e intercambian títulos previamente emitidos",
+          "El mercado exclusivo de pequeñas empresas",
+          "El sector informal de intercambio comercial"
+        ],
         correct: 1,
-        explanation: "La Bolsa es un mercado organizado que conecta la oferta y demanda de instrumentos financieros."
+        explanation: "Aporta liquidez permitiendo que los dueños de bonos u acciones los vendan a terceros."
       },
       {
-        question: "¿Qué es un derivado financiero?",
-        options: ["Un tipo de moneda física emitida por bancos regionales", "Un instrumento cuyo valor depende del precio de otro activo subyacente", "Una cuenta de ahorros libre de impuestos", "Un préstamo directo entre dos personas particulares"],
+        question: "¿Qué es un Fondo de Inversión?",
+        options: [
+          "Patrimonio reunido por varios inversionistas para gestionar diversificadamente",
+          "Una caja fuerte física ubicada en la sede bancaria",
+          "El presupuesto anual asignado a los ministerios",
+          "Un seguro de vida obligatorio"
+        ],
+        correct: 0,
+        explanation: "Permite acceder a portafolios diversificados administrados profesionalmente."
+      },
+      {
+        question: "¿Qué significa Diversificar una inversión?",
+        options: [
+          "Colocar todo el capital en un solo activo rentable",
+          "Repartir la inversión entre varios activos para mitigar riesgos",
+          "Guardar el dinero en efectivo bajo el colchón",
+          "Gastar las ganancias en bienes de consumo rápido"
+        ],
         correct: 1,
-        explanation: "Su valor proviene o se deriva de activos subyacentes como acciones, materias primas o tasas."
+        explanation: "No poner todos los huevos en la misma canasta reduce el impacto de pérdidas."
       },
       {
-        question: "¿A qué se refiere el término 'Diversificación' en inversiones?",
-        options: ["Invertir todo el capital disponible en un solo producto estrella", "Repartir el capital entre distintos activos para reducir el riesgo", "Cambiar de banco distribuidor cada mes", "Retirar todas las ganancias obtenidas en efectivo"],
+        question: "¿Qué es la Política Fiscal?",
+        options: [
+          "El control de los tipos de interés por parte del Banco Central",
+          "La administración del gasto público y la recaudación de impuestos por el Gobierno",
+          "El reglamento de contratación de personal en bancos",
+          "El conjunto de normas de comercio exterior"
+        ],
         correct: 1,
-        explanation: "Diversificar minimiza el impacto negativo que la caída de un activo individual tendría sobre la cartera."
+        explanation: "La ejecuta el Ministerio de Finanzas/Hacienda a través del presupuesto e impuestos."
       },
       {
-        question: "¿Qué es el Mercado Primario de valores?",
-        options: ["Donde se negocian títulos emitidos e intercambiados previamente", "Donde se venden por primera vez títulos recién emitidos", "Un mercado exclusivo para la compra de materias primas", "El espacio reservado para transacciones entre particulares"],
-        correct: 1,
-        explanation: "En el mercado primario las entidades emisoras captan capital nuevo vendiendo títulos por primera vez."
-      },
-      {
-        question: "¿Qué distingue al Mercado Secundario de valores?",
-        options: ["Permite la reventa y negociación de títulos ya existentes", "Es donde el gobierno compra divisas directamente", "Solo opera con criptomonedas y activos digitales", "Es exclusivo para préstamos de consumo a corto plazo"],
+        question: "¿Qué son los Títulos de Deuda Pública?",
+        options: [
+          "Documentos emitidos por el Estado para captar financiamiento",
+          "Multas impuestas a los ciudadanos que no pagan impuestos",
+          "Acciones de empresas privadas adquiridas por personas",
+          "Contratos de alquiler de edificios públicos"
+        ],
         correct: 0,
-        explanation: "El mercado secundario otorga liquidez a los inversionistas para vender títulos adquiridos previamente."
+        explanation: "Son bonos u obligaciones emitidas por el gobierno para financiar gasto público."
       },
       {
-        question: "¿Qué es un dividendo?",
-        options: ["La comisión cobrada por el corredor de bolsa", "La parte de las ganancias que una empresa distribuye a sus accionistas", "El pago de un interés fijo por la emisión de un bono", "La penalización aplicada a una empresa con pérdidas"],
-        correct: 1,
-        explanation: "Los dividendos representan la retribución económica enviada a los propietarios de acciones."
-      },
-      {
-        question: "¿Qué es la Política Monetaria?",
-        options: ["El conjunto de acciones del Banco Central para gestionar la cantidad de dinero y la tasa de interés", "La gestión gubernamental sobre la recaudación de impuestos directos", "El control estricto de precios en supermercados locales", "La estrategia de contratación de personal en el sector bancario"],
+        question: "¿Qué es la Tasa Interna de Retorno (TIR)?",
+        options: [
+          "La tasa de descuento que iguala el valor presente de ingresos y egresos (VPN = 0)",
+          "El porcentaje devuelto por las compras con tarjeta de crédito",
+          "La comisión cobrada al retirar dinero de un cajero ajeno",
+          "El interés anual cobrado por casas de empeño"
+        ],
         correct: 0,
-        explanation: "La política monetaria busca controlar la inflación y mantener la estabilidad económica del país."
-      },
-      {
-        question: "¿Qué significa que un bono cotice 'bajo par'?",
-        options: ["Que se vende a un precio inferior a su valor nominal", "Que cotiza exactamente igual a su valor de emisión", "Que su tasa de rendimiento anual es igual a cero", "Que no pagará intereses durante el periodo actual"],
-        correct: 0,
-        explanation: "Un bono cotiza bajo par cuando su precio en el mercado cae por debajo del valor nominal asignado."
-      },
-      {
-        question: "¿Qué mide la Tasa Interna de Retorno (TIR)?",
-        options: ["La tasa de descuento que hace que el Valor Presente Neto (VPN) sea igual a cero", "El porcentaje exacto recaudado por impuestos corporativos", "El tiempo total necesario para recuperar el dinero invertido", "La comisión fija pagada al administrador del proyecto"],
-        correct: 0,
-        explanation: "La TIR indica la rentabilidad porcentual promedio estimada de un proyecto de inversión."
-      },
-      {
-        question: "¿Qué se entiende por 'Riesgo de Liquidez'?",
-        options: ["Incapacidad de vender un activo a tiempo sin asumir una pérdida sustancial de precio", "La pérdida de valor provocada por variaciones de tipo de cambio", "La quiebra definitiva de la entidad garante del instrumento", "La probabilidad de cambios desfavorables en la tasa de interés"],
-        correct: 0,
-        explanation: "Ocurre cuando no hay compradores inmediatos en el mercado para convertir el activo en efectivo."
-      },
-      {
-        question: "¿Qué rol cumple una Sociedad Calificadora de Riesgo?",
-        options: ["Evaluar la capacidad de pago y riesgo crediticio de los emisores de títulos", "Prestar dinero de emergencia a instituciones financieras", "Establecer la tasa de inflación objetivo para el siguiente trimestre", "Supervisar las transferencias bancarias de personas naturales"],
-        correct: 0,
-        explanation: "Emiten notas o calificaciones para informar al mercado sobre la solvencia y riesgo de los emisores."
+        explanation: "Indica la rentabilidad media anual que genera un proyecto de inversión."
       },
       {
         question: "¿Qué es el Valor Presente Neto (VPN)?",
-        options: ["La suma de los flujos de caja futuros descontados al momento actual menos la inversión inicial", "El valor comercial del edificio sede del banco central", "El saldo contable disponible al cierre de la jornada de operaciones", "El interés acumulado cobrado al finalizar un préstamo a largo plazo"],
+        options: [
+          "El cálculo que trae los flujos de dinero futuros al valor de hoy restando la inversión inicial",
+          "El total de dinero existente en la caja chica de la empresa",
+          "El precio de venta de una maquinaria al final de su vida útil",
+          "La suma simple sin intereses de las ganancias previstas"
+        ],
         correct: 0,
-        explanation: "El VPN permite determinar si una inversión generará ganancias o pérdidas en términos del dinero de hoy."
+        explanation: "Permite evaluar si una inversión aumentará o disminuirá el valor financiero actual."
       },
       {
-        question: "¿Qué es el apalancamiento financiero?",
-        options: ["Utilizar deuda para financiar una operación e intentar aumentar la rentabilidad", "Consolidar todas las deudas en un solo pago mensual", "Invertir exclusivamente con recursos propios sobrantes", "La eliminación total de los costos operativos en una empresa"],
+        question: "¿Qué es el Apalancamiento Financiero?",
+        options: [
+          "Utilizar endeudamiento para aumentar la capacidad de inversión",
+          "Pedir préstamos para pagar salarios vencidos",
+          "Aumentar la cantidad de empleados en el área de ventas",
+          "Cerrar cuentas bancarias que generen comisiones"
+        ],
         correct: 0,
-        explanation: "El apalancamiento incrementa las ganancias potenciales pero también multiplica el riesgo de pérdidas."
+        explanation: "Consiste en usar crédito externo con la meta de multiplicar la rentabilidad."
       },
       {
-        question: "¿Qué es el tipo de cambio nominal?",
-        options: ["El precio relativo de una moneda expresado en términos de otra moneda", "La tasa de inflación descontada de los rendimientos bancarios", "El costo adicional cobrado por el uso de cajeros internacionales", "La diferencia matemática entre las tasas de interés de dos países"],
+        question: "¿Qué es el Tipo de Cambio?",
+        options: [
+          "El precio de una moneda nacional expresado en función de una divisa extranjera",
+          "La comisión que se paga por cambiar un billete roto",
+          "La variación diaria del costo de la gasolina",
+          "El costo de envío de dinero por giros postales"
+        ],
         correct: 0,
-        explanation: "Indica cuántas unidades de una moneda local se necesitan para comprar una unidad de moneda extranjera."
+        explanation: "Indica cuántas unidades de moneda local equivalen a una unidad de moneda extranjera."
       }
     ];
 
     let currentQuestionIndex = 0;
     let score = 0;
     let timerInterval;
-    let timeLeft = 20;
+    let timeLeft = 15;
 
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -423,7 +604,7 @@
     function loadQuestion() {
       const q = questions[currentQuestionIndex];
       document.getElementById('question-count').innerText = `Pregunta ${currentQuestionIndex + 1} de ${questions.length}`;
-      document.getElementById('score-count').innerText = `Puntos: ${score}`;
+      document.getElementById('score-count').innerText = `${score} Pts`;
       document.getElementById('question-title').innerText = q.question;
 
       q.options.forEach((opt, index) => {
@@ -434,14 +615,16 @@
     }
 
     function startTimer() {
-      timeLeft = 20;
-      const progress = document.getElementById('timer-progress');
+      timeLeft = 15;
+      const progress = document.getElementById('progress-bar');
+      document.getElementById('time-left-num').innerText = `${timeLeft}s`;
       progress.style.width = '100%';
 
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         timeLeft--;
-        progress.style.width = `${(timeLeft / 20) * 100}%`;
+        document.getElementById('time-left-num').innerText = `${timeLeft}s`;
+        progress.style.width = `${(timeLeft / 15) * 100}%`;
 
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
@@ -459,18 +642,18 @@
       const detailEl = document.getElementById('feedback-detail');
 
       if (isCorrect) {
-        score += 100 + (timeLeft * 5);
+        score += 100 + (timeLeft * 10);
         titleEl.innerText = "¡RESPUESTA CORRECTA!";
         titleEl.className = "feedback-title correct-text";
         detailEl.innerText = q.explanation;
       } else if (index === -1) {
         titleEl.innerText = "¡TIEMPO AGOTADO!";
         titleEl.className = "feedback-title incorrect-text";
-        detailEl.innerText = `La respuesta correcta era: ${q.options[q.correct]}. ${q.explanation}`;
+        detailEl.innerText = `La correcta era: ${q.options[q.correct]}. ${q.explanation}`;
       } else {
         titleEl.innerText = "¡INCORRECTO!";
         titleEl.className = "feedback-title incorrect-text";
-        detailEl.innerText = `La respuesta correcta era: ${q.options[q.correct]}. ${q.explanation}`;
+        detailEl.innerText = `La correcta era: ${q.options[q.correct]}. ${q.explanation}`;
       }
 
       document.getElementById('current-score').innerText = score;
@@ -489,14 +672,6 @@
 
     function showFinalScreen() {
       document.getElementById('final-score').innerText = score;
-      const maxScore = questions.length * 200;
-      const percentage = (score / maxScore) * 100;
-
-      let msg = "Sigue practicando para mejorar tu puntuación.";
-      if (percentage >= 80) msg = "¡Excelente dominio del sistema financiero!";
-      else if (percentage >= 50) msg = "¡Buen trabajo! Tienes bases sólidas.";
-
-      document.getElementById('final-message').innerText = msg;
       showScreen('result-screen');
     }
 
