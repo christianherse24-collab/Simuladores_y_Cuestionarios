@@ -2,17 +2,491 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Mis Cuestionarios y Simuladores</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuestionario: Recursos y Sistema Financiero</title>
+  
+  <!-- Open Graph Meta Tags para vista previa profesional en WhatsApp y Redes Sociales -->
+  <meta property="og:title" content="Cuestionario: Recursos y Sistema Financiero">
+  <meta property="og:description" content="Pone a prueba tus conocimientos sobre el sistema financiero con este cuestionario interactivo estilo Kahoot.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80">
+  <meta property="og:url" content="https://christianherse24-collab.github.io/Simuladores_y_Cuestionarios/Cuestionario_Rursos_y_Sistema_Financiero.html">
+  <meta property="og:type" content="website">
+
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 50px; background: #121212; color: white; }
-    .btn { display: inline-block; padding: 15px 25px; margin: 10px; background: #46178f; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; }
-    .btn:hover { background: #2f1060; }
+    :root {
+      --bg-color: #46178f;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --red: #e21b3c;
+      --blue: #1368ce;
+      --yellow: #d89e00;
+      --green: #26890c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .quiz-container {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 800px;
+      padding: 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    h1 {
+      color: #46178f;
+      margin-bottom: 20px;
+      font-size: 2.2rem;
+    }
+
+    p {
+      margin-bottom: 25px;
+      font-size: 1.1rem;
+      color: #666;
+    }
+
+    .btn-main {
+      background-color: #46178f;
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .btn-main:hover {
+      background-color: #33106a;
+      transform: scale(1.05);
+    }
+
+    /* Question Screen */
+    .header-quiz {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #666;
+    }
+
+    .timer-bar {
+      height: 10px;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+      margin-bottom: 25px;
+      overflow: hidden;
+    }
+
+    .timer-progress {
+      height: 100%;
+      background-color: #46178f;
+      width: 100%;
+      transition: width 1s linear;
+    }
+
+    .question-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #222;
+      margin-bottom: 30px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .option-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 20px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      text-align: left;
+      transition: opacity 0.2s, transform 0.1s;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    }
+
+    .option-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .option-btn:active {
+      transform: translateY(2px);
+      box-shadow: none;
+    }
+
+    .opt-0 { background-color: var(--red); }
+    .opt-1 { background-color: var(--blue); }
+    .opt-2 { background-color: var(--yellow); }
+    .opt-3 { background-color: var(--green); }
+
+    .option-shape {
+      font-size: 1.4rem;
+      margin-right: 15px;
+    }
+
+    /* Feedback Screen */
+    .feedback-title {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .correct-text { color: #26890c; }
+    .incorrect-text { color: #e21b3c; }
+
+    .score-display {
+      font-size: 1.3rem;
+      margin-bottom: 25px;
+    }
+
+    /* Final Screen */
+    .final-score {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #46178f;
+      margin: 20px 0;
+    }
+
+    .leaderboard {
+      margin-top: 25px;
+      text-align: left;
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .leaderboard h3 {
+      margin-bottom: 10px;
+      color: #46178f;
+    }
+
+    .leaderboard ol {
+      padding-left: 20px;
+    }
+
+    .leaderboard li {
+      margin-bottom: 5px;
+    }
   </style>
 </head>
 <body>
-  <h1>Mis Cuestionarios</h1>
-  <p>Haz clic para abrir el cuestionario:</p>
-  
-  <a class="btn" href="Cuestionario_Rursos_y_Sistema_Financiero.html">Cuestionario: Sistema Financiero</a>
+
+  <div class="quiz-container">
+    
+    <!-- Pantalla Inicial -->
+    <div id="start-screen" class="screen active">
+      <h1>Cuestionario: Recursos y Sistema Financiero</h1>
+      <p>Demuestra tus conocimientos en esta prueba rápida de opción múltiple.</p>
+      <button class="btn-main" onclick="startQuiz()">Comenzar Cuestionario</button>
+    </div>
+
+    <!-- Pantalla de Pregunta -->
+    <div id="quiz-screen" class="screen">
+      <div class="header-quiz">
+        <span id="question-count">Pregunta 1 de 10</span>
+        <span id="score-count">Puntos: 0</span>
+      </div>
+      <div class="timer-bar">
+        <div id="timer-progress" class="timer-progress"></div>
+      </div>
+      <div id="question-title" class="question-title">Cargando pregunta...</div>
+      <div class="options-grid">
+        <button class="option-btn opt-0" onclick="selectOption(0)">
+          <span class="option-shape">▲</span> <span id="opt-text-0">Opción 1</span>
+        </button>
+        <button class="option-btn opt-1" onclick="selectOption(1)">
+          <span class="option-shape">◆</span> <span id="opt-text-1">Opción 2</span>
+        </button>
+        <button class="option-btn opt-2" onclick="selectOption(2)">
+          <span class="option-shape">●</span> <span id="opt-text-2">Opción 3</span>
+        </button>
+        <button class="option-btn opt-3" onclick="selectOption(3)">
+          <span class="option-shape">■</span> <span id="opt-text-3">Opción 4</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pantalla de Retroalimentación Intermedia -->
+    <div id="feedback-screen" class="screen">
+      <div id="feedback-title" class="feedback-title">¡Correcto!</div>
+      <p id="feedback-detail"></p>
+      <div class="score-display">Puntuación actual: <strong id="current-score">0</strong></div>
+      <button class="btn-main" onclick="nextQuestion()">Siguiente Pregunta</button>
+    </div>
+
+    <!-- Pantalla Final -->
+    <div id="result-screen" class="screen">
+      <h1>¡Cuestionario Completado!</h1>
+      <p>Tu puntuación final es:</p>
+      <div id="final-score" class="final-score">0</div>
+      <p id="final-message">¡Buen trabajo!</p>
+      <button class="btn-main" onclick="restartQuiz()">Intentar de Nuevo</button>
+    </div>
+
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "¿Cuál es la función principal del sistema financiero?",
+        options: [
+          "Canalizar el ahorro hacia la inversión",
+          "Imprimir dinero de forma ilimitada",
+          "Cobrar impuestos a los ciudadanos",
+          "Regular los precios del mercado libre"
+        ],
+        correct: 0,
+        explanation: "El sistema financiero conecta a los ahorradores con los inversionistas para dinamizar la economía."
+      },
+      {
+        question: "¿Qué entidad suele actuar como el regulador central de la moneda y la banca?",
+        options: [
+          "La Bolsa de Valores",
+          "El Banco Central",
+          "El Ministerio de Educación",
+          "El Fondo de Inversión Privado"
+        ],
+        correct: 1,
+        explanation: "El Banco Central emite la moneda nacional y supervisa las políticas monetarias."
+      },
+      {
+        question: "¿Qué representa un activo financiero?",
+        options: [
+          "Un bien físico indispensable para la producción",
+          "Un título o derecho intangible a recibir ingresos futuros",
+          "Una deuda que no requiere ser saldada",
+          "El inventario físico retenido en un almacén"
+        ],
+        correct: 1,
+        explanation: "Los activos financieros otorgan a su comprador el derecho a recibir ingresos futuros del vendedor."
+      },
+      {
+        question: "¿Cuál de los siguientes es un instrumento del mercado monetario?",
+        options: [
+          "Acciones ordinarias a largo plazo",
+          "Letras del Tesoro a corto plazo",
+          "Bienes inmuebles comerciales",
+          "Contratos de trabajo indefinidos"
+        ],
+        correct: 1,
+        explanation: "El mercado monetario transa instrumentos de deuda de muy alto nivel de liquidez y corto plazo."
+      },
+      {
+        question: "¿Qué es el riesgo de crédito?",
+        options: [
+          "El riesgo de que una moneda pierda valor por inflación",
+          "La posibilidad de que un prestatario no cumpla con sus pagos",
+          "El peligro de no poder vender un activo rápidamente",
+          "La fluctuación diaria en los tipos de cambio de divisas"
+        ],
+        correct: 1,
+        explanation: "El riesgo crediticio surge ante el posible incumplimiento de las obligaciones contractuales de pago."
+      },
+      {
+        question: "¿Qué diferencia principal existe entre acciones y bonos?",
+        options: [
+          "Las acciones representan deuda y los bonos propiedad",
+          "Las acciones otorgan propiedad parcial y los bonos son instrumentos de deuda",
+          "Los bonos no pagan intereses bajo ninguna circunstancia",
+          "Las acciones garantizan un rendimiento fijo e inalterable"
+        ],
+        correct: 1,
+        explanation: "Al comprar acciones adquieres parte de la empresa; al comprar bonos le prestas dinero a una entidad."
+      },
+      {
+        question: "¿Qué es la inflación?",
+        options: [
+          "El aumento generalizado y sostenido de los precios",
+          "La disminución progresiva del costo de la canasta básica",
+          "El crecimiento constante de las reservas bancarias",
+          "El valor exacto de cambio entre dos monedas internacionales"
+        ],
+        correct: 0,
+        explanation: "La inflación reduce el poder adquisitivo de la moneda a lo largo del tiempo."
+      },
+      {
+        question: "¿Qué función cumple la tasa de interés en un préstamo?",
+        options: [
+          "Es una multa cobrada por mora bancaria",
+          "Es el precio por el uso del dinero prestado a lo largo del tiempo",
+          "Es la comisión única de apertura del trámite",
+          "Es el impuesto gubernamental sobre las transacciones"
+        ],
+        correct: 1,
+        explanation: "La tasa de interés representa el costo del dinero solicitado o el rendimiento del capital guardado."
+      },
+      {
+        question: "¿Qué caracteriza a un fondo de inversión?",
+        options: [
+          "Su patrimonio pertenece a un único inversionista mayoritario",
+          "Reúne el dinero de múltiples inversionistas para diversificar",
+          "Solo invierte en propiedades inmuebles nacionales",
+          "Garantiza duplicar el capital aportado en un mes"
+        ],
+        correct: 1,
+        explanation: "Los fondos de inversión permiten a pequeños y medianos ahorradores acceder a carteras diversificadas."
+      },
+      {
+        question: "¿Qué representa la liquidez de un activo?",
+        options: [
+          "La facilidad con la que se puede convertir en efectivo sin perder valor",
+          "La rentabilidad total porcentual entregada al cabo de un año",
+          "El nivel de riesgo fiscal asociado al instrumento bancario",
+          "La cantidad física de billetes impresos por el estado"
+        ],
+        correct: 0,
+        explanation: "Un activo es muy líquido si se puede vender o transformar rápidamente en dinero efectivo."
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timerInterval;
+    let timeLeft = 20;
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    function startQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      showScreen('quiz-screen');
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const q = questions[currentQuestionIndex];
+      document.getElementById('question-count').innerText = `Pregunta ${currentQuestionIndex + 1} de ${questions.length}`;
+      document.getElementById('score-count').innerText = `Puntos: ${score}`;
+      document.getElementById('question-title').innerText = q.question;
+
+      q.options.forEach((opt, index) => {
+        document.getElementById(`opt-text-${index}`).innerText = opt;
+      });
+
+      startTimer();
+    }
+
+    function startTimer() {
+      timeLeft = 20;
+      const progress = document.getElementById('timer-progress');
+      progress.style.width = '100%';
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        progress.style.width = `${(timeLeft / 20) * 100}%`;
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          selectOption(-1); // Tiempo agotado
+        }
+      }, 1000);
+    }
+
+    function selectOption(index) {
+      clearInterval(timerInterval);
+      const q = questions[currentQuestionIndex];
+      const isCorrect = (index === q.correct);
+
+      const titleEl = document.getElementById('feedback-title');
+      const detailEl = document.getElementById('feedback-detail');
+
+      if (isCorrect) {
+        score += 100 + (timeLeft * 5);
+        titleEl.innerText = "¡RESPUESTA CORRECTA!";
+        titleEl.className = "feedback-title correct-text";
+        detailEl.innerText = q.explanation;
+      } else if (index === -1) {
+        titleEl.innerText = "¡TIEMPO AGOTADO!";
+        titleEl.className = "feedback-title incorrect-text";
+        detailEl.innerText = `La respuesta correcta era: ${q.options[q.correct]}. ${q.explanation}`;
+      } else {
+        titleEl.innerText = "¡INCORRECTO!";
+        titleEl.className = "feedback-title incorrect-text";
+        detailEl.innerText = `La respuesta correcta era: ${q.options[q.correct]}. ${q.explanation}`;
+      }
+
+      document.getElementById('current-score').innerText = score;
+      showScreen('feedback-screen');
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        showScreen('quiz-screen');
+        loadQuestion();
+      } else {
+        showFinalScreen();
+      }
+    }
+
+    function showFinalScreen() {
+      document.getElementById('final-score').innerText = score;
+      const maxScore = questions.length * 200;
+      const percentage = (score / maxScore) * 100;
+
+      let msg = "Sigue practicando para mejorar tu puntuación.";
+      if (percentage >= 80) msg = "¡Excelente dominio del sistema financiero!";
+      else if (percentage >= 50) msg = "¡Buen trabajo! Tienes bases sólidas.";
+
+      document.getElementById('final-message').innerText = msg;
+      showScreen('result-screen');
+    }
+
+    function restartQuiz() {
+      startQuiz();
+    }
+  </script>
 </body>
 </html>
