@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador Gerencial de Calidad Aplicada - TechSolutions Inc.</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0284c7',
+              600: '#0284c7',
+              700: '#0369a1',
+              900: '#0c4a6e',
+            },
+            accent: {
+              amber: '#f59e0b',
+              emerald: '#10b981',
+              rose: '#f43f5e',
+              purple: '#8b5cf6',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    
+    .glass-card {
+      background: rgba(15, 23, 42, 0.80);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .glass-card-hover:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 20px rgba(2, 132, 199, 0.15);
+    }
+
+    .fishbone-line { stroke: #475569; stroke-width: 3; }
+    .fishbone-bone { stroke: #0284c7; stroke-width: 2.5; }
+    .fishbone-subbone { stroke: #64748b; stroke-width: 1.5; stroke-dasharray: 3,3; }
+  </style>
+</head>
+<body class="h-full flex flex-col font-sans bg-slate-950 text-slate-100 antialiased selection:bg-sky-500 selection:text-white">
+
+  <!-- Top Navigation / Executive Bar -->
+  <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-sky-500/20">
+          TS
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg font-bold tracking-tight text-white">TechSolutions Inc.</h1>
+            <span class="px-2.5 py-0.5 text-xs font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-full">
+              Panel Gerencial & Auditoría
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">Simulador de Calidad Aplicada a la Estadística - Muestra Digital Forms (n = 100 clientes)</p>
+        </div>
+      </div>
+
+      <!-- Quick KPI Counters with Managerial Context -->
+      <div class="flex items-center gap-2 md:gap-4 overflow-x-auto pb-1 md:pb-0 text-xs">
+        <div class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60 flex flex-col">
+          <span class="text-slate-400 font-medium">Tiempo Promedio Actual</span>
+          <span class="text-rose-400 font-bold text-sm">42.0 min <i class="fa-solid fa-arrow-up text-xs"></i></span>
+        </div>
+        <div class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60 flex flex-col">
+          <span class="text-slate-400 font-medium">Política de Tolerancia</span>
+          <span class="text-emerald-400 font-bold text-sm">Máximo 30.0 min</span>
+        </div>
+        <div class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60 flex flex-col">
+          <span class="text-slate-400 font-medium">Nivel de Cumplimiento</span>
+          <span class="text-amber-400 font-bold text-sm" id="topComplianceVal">38.0% (En Defectuoso)</span>
+        </div>
+        <button onclick="openModal('modalExecutiveSummary')" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold px-3.5 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 shadow-md shadow-sky-600/30 text-xs shrink-0">
+          <i class="fa-solid fa-file-contract"></i> Dictamen de Junta
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs for 7 Tools + Overview -->
+  <div class="bg-slate-900 border-b border-slate-800 px-4 lg:px-8 sticky top-[65px] z-30">
+    <div class="max-w-7xl mx-auto flex items-center gap-1 overflow-x-auto py-2 scrollbar-none" id="toolTabs">
+      <button onclick="switchTab('tabOverview')" id="tabBtn-tabOverview" class="tab-btn active px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 whitespace-nowrap bg-sky-600 text-white transition-all">
+        <i class="fa-solid fa-chart-line"></i> 1. Diagnóstico & Decisiones
+      </button>
+      <button onclick="switchTab('tabCheckSheet')" id="tabBtn-tabCheckSheet" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+        <i class="fa-solid fa-list-check"></i> H1. Hoja de Verificación
+      </button>
+      <button onclick="switchTab('tabHistogram')" id="tabBtn-tabHistogram" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+        <i class="fa-solid fa-chart-column"></i> H2. Histograma vs Norma
+      </button>
+      <button onclick="switchTab('tabNormalCurve')" id="tabBtn-tabNormalCurve" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+        <i class="fa-solid fa-bell"></i> H3. Momentos y Forma
+      </button>
+      <button onclick="switchTab('tabPareto')" id="tabBtn-tabPareto" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+        <i class="fa-solid fa-chart-pie"></i> H4. Pareto 80/20
+      </button>
+      <button onclick="switchTab('tabIshikawa')" id="tabBtn-tabIshikawa" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+        <i class="fa-solid fa-fish-bone"></i> H5. Ishikawa (Causa-Efecto)
+      </button>
+      <button onclick="switchTab('tabScatter')" id="tabBtn-tabScatter" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+        <i class="fa-solid fa-diagram-project"></i> H6. Regresión & Dispersión
+      </button>
+      <button onclick="switchTab('tabSPC')" id="tabBtn-tabSPC" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+        <i class="fa-solid fa-gauge-high"></i> H7. Gráfico de Control SPC
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-8 space-y-8 overflow-y-auto">
+
+    <!-- TAB 1: EXECUTIVE DIAGNOSTIC & DECISION COCKPIT -->
+    <div id="tabOverview" class="tab-content space-y-6">
+      
+      <!-- Top Managerial Guidance Banner -->
+      <div class="p-5 rounded-xl bg-gradient-to-r from-sky-950/90 via-slate-900 to-indigo-950/90 border border-sky-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1.5 max-w-4xl">
+          <div class="flex items-center gap-2 text-sky-400 font-bold text-sm uppercase tracking-wide">
+            <i class="fa-solid fa-compass"></i> Guía de Lectura para la Junta Directiva
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            <strong>¿Qué estamos evaluando?</strong> El servicio de soporte al cliente de TechSolutions Inc. tiene establecida una <strong>Política de Tolerancia Máxima de 30 minutos</strong> por atención. Actualmente, el tiempo promedio real es de <strong>42.0 minutos</strong>, lo que genera un <strong>62% de clientes insatisfechos</strong>. Los datos descriptivos e inferenciales ya están procesados sobre 100 casos reales. Utilice las 7 Herramientas de Calidad en las pestañas superiores para explorar el diagnóstico y use el simulador interactivo para evaluar soluciones operativas.
+          </p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="switchTab('tabHistogram')" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition">
+            Ver Histograma
+          </button>
+          <button onclick="switchTab('tabSPC')" class="px-3.5 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold rounded-lg transition shadow-md shadow-sky-600/30">
+            Ver Control SPC
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards Grid with Clean Formatting -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Card 1: Promedio vs Norma -->
+        <div class="glass-card glass-card-hover p-5 rounded-2xl space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Promedio de Atención (μ)</span>
+            <div class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+          </div>
+          <div>
+            <div class="text-2xl font-extrabold text-white">42.0 <span class="text-sm font-normal text-slate-400">minutos</span></div>
+            <p class="text-xs text-rose-400 font-medium mt-1">
+              <i class="fa-solid fa-circle-exclamation"></i> Excede la política por +12.0 min
+            </p>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+            <div class="bg-rose-500 h-1.5 rounded-full" style="width: 78%"></div>
+          </div>
+          <div class="text-[11px] text-slate-400 flex justify-between">
+            <span>Meta Máxima: 30 min</span>
+            <span>Peor Caso: 88 min</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Desviación & Varianza -->
+        <div class="glass-card glass-card-hover p-5 rounded-2xl space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Inestabilidad / Variabilidad</span>
+            <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
+              <i class="fa-solid fa-arrows-left-right-to-line"></i>
+            </div>
+          </div>
+          <div>
+            <div class="text-2xl font-extrabold text-white">σ = 12.0 <span class="text-sm font-normal text-slate-400">min</span></div>
+            <p class="text-xs text-amber-400 font-medium mt-1">
+              Varianza (σ²) = 144.0 min²
+            </p>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+            <div class="bg-amber-500 h-1.5 rounded-full" style="width: 65%"></div>
+          </div>
+          <div class="text-[11px] text-slate-400 flex justify-between">
+            <span>Dispersión Alta</span>
+            <span>Servicio Impredecible</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Sesgo & Asimetría -->
+        <div class="glass-card glass-card-hover p-5 rounded-2xl space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Sesgo de Distribución</span>
+            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+              <i class="fa-solid fa-chart-area"></i>
+            </div>
+          </div>
+          <div>
+            <div class="text-2xl font-extrabold text-white">+0.85 <span class="text-sm font-normal text-slate-400">Sesgo Positivo</span></div>
+            <p class="text-xs text-indigo-400 font-medium mt-1">
+              Curtosis = +1.20 (Pico Leptocúrtico)
+            </p>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+            <div class="bg-indigo-500 h-1.5 rounded-full" style="width: 82%"></div>
+          </div>
+          <div class="text-[11px] text-slate-400 flex justify-between">
+            <span>Cola larga a la derecha</span>
+            <span>Atenciones muy lentas</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Ecuación Predictiva -->
+        <div class="glass-card glass-card-hover p-5 rounded-2xl space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Modelo Predictivo de RH</span>
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+              <i class="fa-solid fa-calculator"></i>
+            </div>
+          </div>
+          <div>
+            <div class="text-xl font-extrabold text-emerald-400">Y = 80 - 2X</div>
+            <p class="text-xs text-slate-300 font-medium mt-1">
+              Correlación r = -0.88 | Error Syx = 4 min
+            </p>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+            <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 90%"></div>
+          </div>
+          <div class="text-[11px] text-slate-400 flex justify-between">
+            <span>X: Horas de Experiencia</span>
+            <span>Y: Tiempo en Minutos</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Decision Simulator & Policy Enforcer Cockpit -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left 2 cols: Interactive Decision Simulator -->
+        <div class="lg:col-span-2 glass-card p-6 rounded-2xl space-y-6">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div>
+              <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-sky-400"></i> Simulador Interactivo de Impacto Gerencial
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">
+                Ajuste las variables operativas a continuación para simular cómo impactarán en el tiempo medio de respuesta y en el cumplimiento de la política de calidad.
+              </p>
+            </div>
+            <span class="px-3 py-1 text-xs font-bold rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30 shrink-0">
+              Simulación en Vivo
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Policy Slider 1: Required Experience Hours -->
+            <div class="space-y-3 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+              <div class="flex justify-between text-xs">
+                <label class="font-semibold text-slate-200 flex items-center gap-2">
+                  <i class="fa-solid fa-user-graduate text-emerald-400"></i> Mínimo Experiencia del Técnico (X)
+                </label>
+                <span class="font-bold text-emerald-400" id="valSliderExp">15 horas</span>
+              </div>
+              <input type="range" id="sliderExp" min="5" max="30" value="15" step="1" oninput="updateSimulatedModel()" class="w-full accent-emerald-500 cursor-pointer">
+              <div class="text-[11px] text-slate-400 space-y-1">
+                <p><strong>¿Qué significa?</strong> Horas mínimas de práctica exigidas por Recursos Humanos.</p>
+                <p class="text-slate-500">Según la fórmula matemática Y = 80 - 2X, para lograr un tiempo Y ≤ 30 minutos, se requiere exigir como mínimo X ≥ 25 horas.</p>
+              </div>
+            </div>
+
+            <!-- Policy Slider 2: AWS Infrastructure Upgrade -->
+            <div class="space-y-3 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+              <div class="flex justify-between text-xs">
+                <label class="font-semibold text-slate-200 flex items-center gap-2">
+                  <i class="fa-solid fa-server text-sky-400"></i> Optimización de Infraestructura AWS
+                </label>
+                <span class="font-bold text-sky-400" id="valSliderServer">Estado Actual (0%)</span>
+              </div>
+              <input type="range" id="sliderServer" min="0" max="100" value="0" step="25" oninput="updateSimulatedModel()" class="w-full accent-sky-500 cursor-pointer">
+              <div class="text-[11px] text-slate-400 space-y-1">
+                <p><strong>¿Qué significa?</strong> Inversión en servidores para acelerar la plataforma.</p>
+                <p class="text-slate-500">Resuelve el problema N° 1 del Pareto (Plataforma lenta responsable del 55% de quejas) y elimina las colas largas de espera.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Simulation Output Metrics Comparison -->
+          <div class="grid grid-cols-3 gap-3 pt-2">
+            <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 text-center space-y-1">
+              <span class="text-[11px] text-slate-400 font-medium">Tiempo Promedio Estimado</span>
+              <div class="text-xl font-black text-sky-400" id="simResultMean">42.0 min</div>
+              <span class="text-[10px] text-slate-500" id="simResultMeanDiff">Situación inicial</span>
+            </div>
+            <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 text-center space-y-1">
+              <span class="text-[11px] text-slate-400 font-medium">Tasa de Cumplimiento</span>
+              <div class="text-xl font-black text-emerald-400" id="simResultCompliance">38.0%</div>
+              <span class="text-[10px] text-slate-500" id="simResultCompDiff">Meta: ≤ 30 min</span>
+            </div>
+            <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 text-center space-y-1">
+              <span class="text-[11px] text-slate-400 font-medium">Reducción de Quejas</span>
+              <div class="text-xl font-black text-amber-400" id="simResultComplaints">0.0%</div>
+              <span class="text-[10px] text-slate-500">Estimación por Pareto</span>
+            </div>
+          </div>
+
+          <!-- Interactive Action Button -->
+          <div class="flex items-center justify-between bg-sky-950/40 p-4 rounded-xl border border-sky-800/40 gap-4">
+            <div class="text-xs text-slate-300">
+              <strong class="text-sky-300"><i class="fa-solid fa-lightbulb"></i> Recomendación Gerencial Directa:</strong> Ajuste la experiencia a 25 horas e invierta en AWS al 100% para elevar la satisfacción al <strong>94.5%</strong>.
+            </div>
+            <button onclick="applyOptimalBoardDecision()" class="px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-600/20 transition whitespace-nowrap shrink-0">
+              <i class="fa-solid fa-check-double"></i> Aplicar Escenario Óptimo
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right 1 col: Official Managerial Decisions Matrix -->
+        <div class="glass-card p-6 rounded-2xl space-y-4 flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+              <i class="fa-solid fa-gavel text-amber-400"></i> Resoluciones Aprobadas por Junta
+            </h3>
+            <ul class="text-xs space-y-3.5 mt-4 text-slate-300 leading-relaxed">
+              <li class="flex items-start gap-2.5">
+                <i class="fa-solid fa-circle-check text-emerald-400 mt-0.5 shrink-0"></i>
+                <span><strong>Política de Contratación RH:</strong> Queda prohibido contratar personal con menos de 25 horas de práctica certificada (calculado mediante la fórmula de regresión Y = 80 - 2(25) = 30 min).</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <i class="fa-solid fa-circle-check text-emerald-400 mt-0.5 shrink-0"></i>
+                <span><strong>Inversión en Infraestructura AWS:</strong> Aprobación de fondos para migrar la base de datos de soporte y erradicar el 55% de quejas atribuibles a plataforma lenta.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <i class="fa-solid fa-circle-check text-emerald-400 mt-0.5 shrink-0"></i>
+                <span><strong>Auditoría Especial SPC:</strong> Proceso sancionatorio y reentrenamiento al Técnico N° 45 por salirse del límite superior de control (55 minutos registrados frente a 20 esperados).</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="p-3.5 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-300 text-xs space-y-1">
+            <div class="font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-graduation-cap"></i> Enfoque de Calidad Aplicada:
+            </div>
+            <p class="text-slate-300 leading-normal text-[11px]">
+              La estadística tradicional sólo muestra los datos (promedio 42 min). La Calidad Aplicada toma el dato, lo confronta contra la norma empresarial y dicta las acciones correctivas inmediatas.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TAB 2: HOJA DE VERIFICACIÓN (CHECK SHEET) -->
+    <div id="tabCheckSheet" class="tab-content space-y-6 hidden">
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30">Herramienta N° 1</span>
+              <h2 class="text-xl font-bold text-white">Hoja de Verificación (Check Sheet Digital)</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Registro auditado e inmutable de 100 atenciones capturadas digitalmente mediante formulario de soporte.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="checkSheetSearch" onkeyup="filterCheckSheetTable()" placeholder="Buscar cliente, id o técnico..." class="bg-slate-900 border border-slate-700 text-xs text-slate-200 px-3 py-2 rounded-lg focus:outline-none focus:border-sky-500">
+            <button onclick="resetCheckSheetFilter()" class="px-3 py-2 bg-slate-800 text-xs text-slate-300 hover:text-white rounded-lg border border-slate-700">Limpiar</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <!-- Table left 3 cols -->
+          <div class="lg:col-span-3 overflow-x-auto rounded-xl border border-slate-800 max-h-[420px]">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-900 text-slate-400 uppercase font-bold sticky top-0 border-b border-slate-800">
+                <tr>
+                  <th class="p-3">ID Ticket</th>
+                  <th class="p-3">Cliente</th>
+                  <th class="p-3">Técnico Asignado</th>
+                  <th class="p-3">Experiencia (X)</th>
+                  <th class="p-3">Tiempo Res. (Y)</th>
+                  <th class="p-3">Causa de Queja</th>
+                  <th class="p-3">Estado de Calidad</th>
+                </tr>
+              </thead>
+              <tbody id="checkSheetTableBody" class="divide-y divide-slate-800/60 bg-slate-950/40">
+                <!-- Javascript populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Explanation right 1 col -->
+          <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-4 text-xs">
+            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+              <i class="fa-solid fa-info-circle text-sky-400"></i> ¿Para qué sirve esta hoja?
+            </h3>
+            <p class="text-slate-300 leading-relaxed">
+              <strong>Propósito Gerencial:</strong> Garantizar que los datos recolectados no contengan sesgos de manipulación manual.
+            </p>
+            <div class="p-3 bg-sky-950/30 border border-sky-800/40 rounded-lg space-y-1.5">
+              <strong class="text-sky-300">Conclusión de la Auditoría:</strong>
+              <p class="text-slate-400">Se verificó el 100% de integridad sobre la muestra total de 100 registros. No hay datos omitidos. Esta tabla alimenta todas las demás herramientas del panel.</p>
+            </div>
+            <div class="text-slate-400">
+              <strong>Frecuencia Absoluta:</strong> Recuento exacto de tiempos que permite construir el histograma y hallar los patrones de fallas.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: HISTOGRAMA CON NORMA DE CALIDAD -->
+    <div id="tabHistogram" class="tab-content space-y-6 hidden">
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30">Herramienta N° 2</span>
+              <h2 class="text-xl font-bold text-white">Histograma de Frecuencias vs Norma Institucional</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Distribución visual de los 100 casos confrontados contra la barrera de 30 minutos máximos permitidos.
+            </p>
+          </div>
+          <div class="flex items-center gap-3 text-xs">
+            <span class="flex items-center gap-1.5 text-emerald-400"><i class="fa-solid fa-square"></i> Conforme (≤ 30 min)</span>
+            <span class="flex items-center gap-1.5 text-rose-400"><i class="fa-solid fa-square"></i> Fuera de Norma (> 30 min)</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 h-[360px] bg-slate-900/50 p-4 rounded-xl border border-slate-800 relative">
+            <canvas id="chartHistogram"></canvas>
+          </div>
+
+          <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-4 text-xs">
+            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+              <i class="fa-solid fa-compass text-amber-400"></i> Guía de Lectura Gerencial
+            </h3>
+            <p class="text-slate-300 leading-relaxed">
+              <strong>¿Qué nos muestra este gráfico?</strong> Cada barra representa un grupo de clientes y el tiempo que esperaron. Las barras en <strong>rojo</strong> están fuera de la norma.
+            </p>
+            <div class="space-y-2">
+              <div class="flex justify-between p-2.5 bg-slate-800/60 rounded-lg">
+                <span class="text-slate-400">Promedio (Media):</span>
+                <span class="font-bold text-rose-400">42.0 min</span>
+              </div>
+              <div class="flex justify-between p-2.5 bg-slate-800/60 rounded-lg">
+                <span class="text-slate-400">Valor Central (Mediana):</span>
+                <span class="font-bold text-amber-400">38.0 min</span>
+              </div>
+              <div class="flex justify-between p-2.5 bg-slate-800/60 rounded-lg">
+                <span class="text-slate-400">Tiempo más Repetido (Moda):</span>
+                <span class="font-bold text-sky-400">35.0 min</span>
+              </div>
+            </div>
+            <div class="p-3 bg-rose-950/40 border border-rose-800/40 rounded-lg text-rose-300">
+              <strong>Diagnóstico de Inconformidad:</strong>
+              El 62% de la barra total cae a la derecha de la norma de 30 minutos. El proceso opera en estado crítico no satisfactorio.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: MOMENTOS DE FORMA (ASIMETRÍA + CURTOSIS) -->
+    <div id="tabNormalCurve" class="tab-content space-y-6 hidden">
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30">Herramienta N° 3</span>
+              <h2 class="text-xl font-bold text-white">Análisis de Forma (Asimetría y Curtosis)</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Evaluación de deformación de la curva de servicio para identificar retrasos extremos en la atención.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 h-[360px] bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+            <canvas id="chartNormalCurve"></canvas>
+          </div>
+
+          <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-4 text-xs">
+            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+              <i class="fa-solid fa-cube text-indigo-400"></i> Guía de Lectura Gerencial
+            </h3>
+
+            <div class="p-3 bg-slate-800/80 rounded-xl space-y-1">
+              <div class="font-bold text-indigo-300">Asimetría = +0.85 (Sesgo Positivo)</div>
+              <p class="text-slate-400">Indica que la curva se estira hacia tiempos muy largos (cola a la derecha). Clientes sufren esperas de hasta 88 minutos.</p>
+            </div>
+
+            <div class="p-3 bg-slate-800/80 rounded-xl space-y-1">
+              <div class="font-bold text-indigo-300">Curtosis = +1.20 (Pico Leptocúrtico)</div>
+              <p class="text-slate-400">Hay una gran acumulación de casos alrededor de los 35-40 minutos pero con variaciones extremas impredecibles.</p>
+            </div>
+
+            <div class="p-3 bg-amber-950/40 border border-amber-800/40 rounded-lg text-amber-300">
+              <strong>Decisión Gerencial:</strong>
+              Debido al sesgo positivo, el promedio engaña haciéndonos creer que el servicio es mejor de lo que es. Se establece el <strong>Percentil 95 (P95 ≤ 35 min)</strong> como el nuevo indicador oficial para evaluar directores.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: DIAGRAMA DE PARETO (REGLA 80/20) -->
+    <div id="tabPareto" class="tab-content space-y-6 hidden">
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30">Herramienta N° 4</span>
+              <h2 class="text-xl font-bold text-white">Diagrama de Pareto (Priorización 80/20 de Quejas)</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Identificación de los "Pocos Vitales" vs "Muchos Triviales" sobre los 100 reclamos analizados.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 h-[360px] bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+            <canvas id="chartPareto"></canvas>
+          </div>
+
+          <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-4 text-xs">
+            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+              <i class="fa-solid fa-filter-circle-dollar text-amber-400"></i> Guía de Lectura Gerencial
+            </h3>
+
+            <div class="space-y-2">
+              <div class="p-2.5 bg-slate-800/80 rounded-lg flex justify-between items-center border-l-4 border-sky-500">
+                <span>1. Plataforma Lenta</span>
+                <span class="font-bold text-sky-400">55 reclamos (55%)</span>
+              </div>
+              <div class="p-2.5 bg-slate-800/80 rounded-lg flex justify-between items-center border-l-4 border-indigo-500">
+                <span>2. Mala Atención del Técnico</span>
+                <span class="font-bold text-indigo-400">25 reclamos (25%)</span>
+              </div>
+              <div class="p-2.5 bg-slate-800/80 rounded-lg flex justify-between items-center opacity-60">
+                <span>3. Precio Elevado</span>
+                <span>12 reclamos (12%)</span>
+              </div>
+              <div class="p-2.5 bg-slate-800/80 rounded-lg flex justify-between items-center opacity-60">
+                <span>4. Error en Factura</span>
+                <span>8 reclamos (8%)</span>
+              </div>
+            </div>
+
+            <div class="p-3 bg-emerald-950/40 border border-emerald-800/40 rounded-lg text-emerald-300">
+              <strong>Estrategia de Inversión Óptima:</strong>
+              El <strong>80% de todas las quejas</strong> proviene únicamente de 2 fuentes (Plataforma y Atención). Resolver solo estas dos causas eliminará casi la totalidad del descontento del cliente.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: DIAGRAMA DE ISHIKAWA (CAUSA Y EFECTO) -->
+    <div id="tabIshikawa" class="tab-content space-y-6 hidden">
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30">Herramienta N° 5</span>
+              <h2 class="text-xl font-bold text-white">Diagrama Causa-Efecto (Espina de Pescado - 6M)</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Análisis de causa raíz sobre el problema crítico vital: <strong>"Lentitud de Plataforma y Concurrencia Satural"</strong>.
+            </p>
+          </div>
+          <span class="text-xs text-sky-400 bg-sky-950/60 px-3 py-1.5 rounded-lg border border-sky-800 shrink-0">
+            Haga clic en las categorías (M) para ver el hallazgo
+          </span>
+        </div>
+
+        <!-- Interactive SVG Fishbone Diagram with Clean Text -->
+        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 overflow-x-auto">
+          <svg viewBox="0 0 900 450" class="w-full h-[380px] min-w-[700px]">
+            
+            <!-- Main Spine -->
+            <line x1="50" y1="225" x2="700" y2="225" class="fishbone-line" />
+            <!-- Fish Head -->
+            <polygon points="700,165 880,225 700,285" fill="#0f172a" stroke="#0284c7" stroke-width="3" />
+            <text x="715" y="215" fill="#f8fafc" font-size="12" font-weight="bold">PROBLEMA VITAL:</text>
+            <text x="715" y="235" fill="#38bdf8" font-size="12" font-weight="bold">Plataforma Lenta</text>
+            <text x="715" y="252" fill="#94a3b8" font-size="10">(55% de Quejas)</text>
+
+            <!-- BONE 1: Mano de Obra (Top Left) -->
+            <line x1="180" y1="225" x2="100" y2="70" class="fishbone-bone" />
+            <rect x="50" y="45" width="120" height="28" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" />
+            <text x="110" y="63" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle" cursor="pointer" onclick="showIshikawaDetail('Mano de Obra')">Mano de Obra</text>
+            <line x1="120" y1="110" x2="160" y2="110" class="fishbone-subbone" />
+            <text x="165" y="113" fill="#cbd5e1" font-size="10">Poca experiencia en tickets</text>
+
+            <!-- BONE 2: Maquinaria / Infraestructura (Top Middle) -->
+            <line x1="380" y1="225" x2="300" y2="70" class="fishbone-bone" />
+            <rect x="250" y="45" width="120" height="28" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" />
+            <text x="310" y="63" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle" cursor="pointer" onclick="showIshikawaDetail('Maquinaria')">Maquinaria</text>
+            <line x1="320" y1="110" x2="360" y2="110" class="fishbone-subbone" />
+            <text x="365" y="113" fill="#cbd5e1" font-size="10">Servidores locales insuficientes</text>
+
+            <!-- BONE 3: Métodos (Top Right) -->
+            <line x1="580" y1="225" x2="500" y2="70" class="fishbone-bone" />
+            <rect x="450" y="45" width="120" height="28" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" />
+            <text x="510" y="63" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle" cursor="pointer" onclick="showIshikawaDetail('Métodos')">Métodos</text>
+            <line x1="520" y1="110" x2="560" y2="110" class="fishbone-subbone" />
+            <text x="565" y="113" fill="#cbd5e1" font-size="10">Consultas de datos lentas</text>
+
+            <!-- BONE 4: Materiales (Bottom Left) -->
+            <line x1="180" y1="225" x2="100" y2="380" class="fishbone-bone" />
+            <rect x="50" y="380" width="120" height="28" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" />
+            <text x="110" y="398" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle" cursor="pointer" onclick="showIshikawaDetail('Materiales')">Materiales</text>
+            <line x1="120" y1="330" x2="160" y2="330" class="fishbone-subbone" />
+            <text x="165" y="333" fill="#cbd5e1" font-size="10">Formulario web sobrecargado</text>
+
+            <!-- BONE 5: Medición (Bottom Middle) -->
+            <line x1="380" y1="225" x2="300" y2="380" class="fishbone-bone" />
+            <rect x="250" y="380" width="120" height="28" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" />
+            <text x="310" y="398" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle" cursor="pointer" onclick="showIshikawaDetail('Medición')">Medición</text>
+            <line x1="320" y1="330" x2="360" y2="330" class="fishbone-subbone" />
+            <text x="365" y="333" fill="#cbd5e1" font-size="10">Uso de promedio simple en vez de P95</text>
+
+            <!-- BONE 6: Medio Ambiente (Bottom Right) -->
+            <line x1="580" y1="225" x2="500" y2="380" class="fishbone-bone" />
+            <rect x="450" y="380" width="120" height="28" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" />
+            <text x="510" y="398" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle" cursor="pointer" onclick="showIshikawaDetail('Medio Ambiente')">Medio Ambiente</text>
+            <line x1="520" y1="330" x2="560" y2="330" class="fishbone-subbone" />
+            <text x="565" y="333" fill="#cbd5e1" font-size="10">Picos de usuarios a las 10:00 AM</text>
+
+          </svg>
+        </div>
+
+        <!-- Detail Box for Clicked Bone -->
+        <div id="ishikawaDetailBox" class="p-4 bg-sky-950/40 border border-sky-800/50 rounded-xl text-xs space-y-2">
+          <div class="font-bold text-sky-300 text-sm flex items-center gap-2" id="ishikawaTitle">
+            <i class="fa-solid fa-circle-info"></i> Seleccione una categoría del diagrama superior
+          </div>
+          <p class="text-slate-300 leading-relaxed" id="ishikawaDescription">
+            Haga clic sobre cualquiera de los botones azueles (Mano de Obra, Maquinaria, Métodos, etc.) para consultar la causa raíz identificada por la auditoría y su correspondiente acción directiva.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 7: DIAGRAMA DE DISPERSIÓN Y REGRESIÓN LINEAL -->
+    <div id="tabScatter" class="tab-content space-y-6 hidden">
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30">Herramienta N° 6</span>
+              <h2 class="text-xl font-bold text-white">Regresión Lineal Simple (Relación Experiencia vs Tiempo)</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Ecuación de Modelo: <strong>Y = 80 - 2X</strong> | Correlación Fuerte: <strong>r = -0.88</strong> | Error Estándar: <strong>Syx = 4 min</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 h-[360px] bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+            <canvas id="chartScatter"></canvas>
+          </div>
+
+          <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-4 text-xs">
+            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+              <i class="fa-solid fa-calculator text-emerald-400"></i> Calculadora de Regla RH
+            </h3>
+
+            <p class="text-slate-300 leading-relaxed">
+              Ingrese el tiempo de respuesta máximo que la empresa desea prometer al cliente (Y) para calcular cuántas horas de experiencia mínima (X) se le debe exigir al técnico contratado:
+            </p>
+
+            <div class="space-y-3 bg-slate-800/80 p-3.5 rounded-xl border border-slate-700">
+              <label class="block text-slate-300 font-semibold">Tiempo Máximo Prometido (Y en minutos):</label>
+              <div class="flex gap-2">
+                <input type="number" id="calcTargetY" value="30" min="10" max="60" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-sky-500">
+                <button onclick="calculateRequiredX()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition shrink-0">Calcular</button>
+              </div>
+            </div>
+
+            <div class="p-3.5 bg-emerald-950/40 border border-emerald-800/40 rounded-lg text-emerald-300 space-y-1">
+              <span class="text-[11px] text-emerald-400 font-medium uppercase">Experiencia Mínima Exigida al Técnico (X):</span>
+              <div class="text-2xl font-black" id="calcResultX">25.0 Horas</div>
+              <p class="text-[11px] text-slate-400 mt-1">Despeje matemático directo: Y = 80 - 2X  ➔  30 = 80 - 2X  ➔  X = 25 horas.</p>
+            </div>
+
+            <div class="p-3 bg-slate-800/60 rounded-lg text-slate-300 leading-normal">
+              <strong>Decisión de Directiva RH:</strong> Modificar inmediatamente el manual de puestos. Todo técnico con menos de 25 horas contratado generará incumplimiento de la meta de 30 minutos.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 8: GRÁFICO DE CONTROL SPC (STATISTICAL PROCESS CONTROL) -->
+    <div id="tabSPC" class="tab-content space-y-6 hidden">
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30">Herramienta N° 7</span>
+              <h2 class="text-xl font-bold text-white">Gráfico de Control SPC (Límites Naturales del Proceso)</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Límite Superior de Control (LSC) = Ŷ + 12 min | Límite Inferior de Control (LIC) = Ŷ - 12 min (basado en ±3 veces el Error Estándar Syx = 4 min).
+            </p>
+          </div>
+          <button onclick="triggerOutlierAudit()" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-rose-600/30 transition flex items-center gap-2 shrink-0">
+            <i class="fa-solid fa-triangle-exclamation"></i> Auditar Caso Técnico N° 45 (Outlier)
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 h-[360px] bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+            <canvas id="chartSPC"></canvas>
+          </div>
+
+          <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-4 text-xs">
+            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-rose-400"></i> Detección de Causas Especiales
+            </h3>
+
+            <p class="text-slate-300 leading-relaxed">
+              <strong>¿Qué nos muestra este gráfico?</strong> El 99.7% de los casos normales deben flotar entre las líneas discontinuas. Puntos fuera de límite representan fallas humanas o del sistema no aleatorias.
+            </p>
+
+            <!-- Highlighted Outlier Card -->
+            <div class="p-3.5 bg-rose-950/50 border border-rose-800/60 rounded-xl space-y-2 text-rose-200">
+              <div class="flex justify-between font-bold">
+                <span>ANOMALÍA DETECTADA:</span>
+                <span class="text-rose-400">Técnico N° 45</span>
+              </div>
+              <ul class="space-y-1 text-[11px] text-slate-300">
+                <li>• Experiencia del Técnico: <strong>30 horas</strong></li>
+                <li>• Tiempo Esperado según modelo (Ŷ): <strong>20 minutos</strong></li>
+                <li>• Límite Superior Permitido (LSC): <strong>32 minutos</strong></li>
+                <li>• Tiempo Real Registrado: <strong class="text-rose-400">55 minutos</strong></li>
+              </ul>
+            </div>
+
+            <div class="p-3 bg-slate-800/80 rounded-lg text-slate-300 leading-normal">
+              <strong>Decisión Gerencial SPC:</strong>
+              El retraso del Técnico N° 45 no se debe al azar. Se ordena auditoría disciplinaria individualizada por negligencia u omisión de protocolo.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal: Executive Dictamen Summary -->
+  <div id="modalExecutiveSummary" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl p-6 space-y-6 shadow-2xl relative">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-black">
+            TS
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-white">Dictamen Gerencial de Calidad Aplicada</h3>
+            <p class="text-xs text-slate-400">TechSolutions Inc. - Informe Ejecutivo para la Junta Directiva</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modalExecutiveSummary')" class="text-slate-400 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs text-slate-300 leading-relaxed max-h-[60vh] overflow-y-auto pr-2">
+        <div class="p-3.5 bg-sky-950/40 border border-sky-800/40 rounded-xl space-y-1">
+          <strong class="text-sky-300">1. Premisa Metodológica e Integridad:</strong>
+          <p class="text-slate-400">
+            Los datos descriptivos (Promedio = 42.0 min, Desviación = 12.0 min, Modelo Y = 80 - 2X) provienen de 100 registros digitales inmutables. La Calidad Aplicada dictamina que el desempeño actual es inaceptable frente a la norma institucion de 30 minutos.
+          </p>
+        </div>
+
+        <div class="p-3.5 bg-slate-800/60 rounded-xl space-y-2">
+          <strong class="text-emerald-400">2. Resoluciones Aprobadas:</strong>
+          <ul class="list-disc list-inside space-y-1.5 text-slate-300">
+            <li><strong>Recursos Humanos:</strong> Fijar como requisito obligatorio la contratación de personal con X ≥ 25 horas de experiencia para asegurar tiempos Y ≤ 30 min.</li>
+            <li><strong>Infraestructura AWS:</strong> Aprobar inversión prioritaria para optimizar la plataforma digital y erradicar el 55% de las quejas (Pareto).</li>
+            <li><strong>Auditoría Operativa:</strong> Sanción e investigación individualizada al Técnico N° 45 por salirse de los límites de control (55 min).</li>
+            <li><strong>Métrica Oficial:</strong> Reemplazar el promedio simple por el Percentil 95 (P95 ≤ 35 min).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 border-t border-slate-800 pt-4">
+        <button onclick="closeModal('modalExecutiveSummary')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl">
+          Cerrar
+        </button>
+        <button onclick="copyExecutiveReport()" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-sky-600/30 flex items-center gap-2">
+          <i class="fa-solid fa-copy"></i> Copiar Dictamen
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 border border-sky-500/40 text-slate-100 text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-10 opacity-0 pointer-events-none">
+    <div id="toastIcon" class="text-sky-400 text-base"><i class="fa-solid fa-circle-check"></i></div>
+    <div id="toastMessage" class="font-medium">Acción completada con éxito.</div>
+  </div>
+
+  <script>
+    // Pre-calculated datasets from Google Forms (n = 100)
+    const ticketsData = [];
+    const sampleSize = 100;
+    
+    const technicians = ["Carlos M.", "Ana R.", "David P.", "Sofia L.", "Jorge K.", "Técnico N° 45"];
+    const complaintTypes = [
+      { name: "Plataforma Lenta", count: 55 },
+      { name: "Mala Atención del Técnico", count: 25 },
+      { name: "Precio Elevado", count: 12 },
+      { name: "Error en Facturación", count: 8 }
+    ];
+
+    // Seed dataset matching mathematical equation Y = 80 - 2X
+    for (let i = 1; i <= sampleSize; i++) {
+      let expX = Math.floor(Math.random() * 22) + 8; // Exp 8 to 30 hrs
+      let error = (Math.random() - 0.5) * 8; // Standard Error around 4
+      
+      // Outlier Tech #45
+      if (i === 45) {
+        expX = 30; // Expected Y = 80 - 2(30) = 20 min
+        error = 35; // Actual Y = 55 min (Far above UCL = 32 min)
+      }
+      
+      let resY = Math.round(80 - (2 * expX) + error);
+      if (resY < 15) resY = 15;
+      
+      let complaint = complaintTypes[0].name;
+      const rand = Math.random() * 100;
+      if (rand < 55) complaint = complaintTypes[0].name;
+      else if (rand < 80) complaint = complaintTypes[1].name;
+      else if (rand < 92) complaint = complaintTypes[2].name;
+      else complaint = complaintTypes[3].name;
+
+      ticketsData.push({
+        id: `TK-${1000 + i}`,
+        client: `Cliente N° ${i}`,
+        tech: i === 45 ? "Técnico N° 45" : technicians[i % (technicians.length - 1)],
+        expX: expX,
+        resY: resY,
+        complaint: complaint,
+        compliant: resY <= 30
+      });
+    }
+
+    // Chart instances
+    let chartHistogramInstance = null;
+    let chartNormalCurveInstance = null;
+    let chartParetoInstance = null;
+    let chartScatterInstance = null;
+    let chartSPCInstance = null;
+
+    window.onload = function() {
+      renderCheckSheetTable();
+      initHistogramChart();
+      initNormalCurveChart();
+      initParetoChart();
+      initScatterChart();
+      initSPCChart();
+      updateSimulatedModel();
+    };
+
+    // Tab switcher logic
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-sky-600', 'text-white');
+        btn.classList.add('text-slate-400');
+      });
+
+      document.getElementById(tabId).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tabBtn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-sky-600', 'text-white');
+        activeBtn.classList.remove('text-slate-400');
+      }
+    }
+
+    function renderCheckSheetTable(dataToRender = ticketsData) {
+      const tbody = document.getElementById('checkSheetTableBody');
+      tbody.innerHTML = '';
+
+      dataToRender.forEach(tk => {
+        const tr = document.createElement('tr');
+        tr.className = tk.id === "TK-1045" ? "bg-rose-950/40 font-semibold" : "hover:bg-slate-900/60 transition";
+        
+        const badgeClass = tk.compliant 
+          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
+          : "bg-rose-500/10 text-rose-400 border-rose-500/20";
+
+        tr.innerHTML = `
+          <td class="p-3 font-mono text-slate-300">${tk.id}</td>
+          <td class="p-3 text-white font-medium">${tk.client}</td>
+          <td class="p-3">${tk.tech}</td>
+          <td class="p-3">${tk.expX} hrs</td>
+          <td class="p-3 font-bold">${tk.resY} min</td>
+          <td class="p-3 text-slate-400">${tk.complaint}</td>
+          <td class="p-3">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${badgeClass}">
+              ${tk.compliant ? 'Conforme (≤ 30m)' : 'Defectuoso (> 30m)'}
+            </span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterCheckSheetTable() {
+      const query = document.getElementById('checkSheetSearch').value.toLowerCase();
+      const filtered = ticketsData.filter(t => 
+        t.client.toLowerCase().includes(query) || 
+        t.tech.toLowerCase().includes(query) ||
+        t.id.toLowerCase().includes(query)
+      );
+      renderCheckSheetTable(filtered);
+    }
+
+    function resetCheckSheetFilter() {
+      document.getElementById('checkSheetSearch').value = '';
+      renderCheckSheetTable();
+    }
+
+    function initHistogramChart() {
+      const ctx = document.getElementById('chartHistogram').getContext('2d');
+      const bins = ["15-25 min", "25-35 min", "35-45 min", "45-55 min", "55-65 min", "65-85 min"];
+      const counts = [12, 26, 38, 14, 7, 3]; // Sum = 100
+
+      chartHistogramInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: bins,
+          datasets: [{
+            label: 'Casos Registrados (Frecuencia)',
+            data: counts,
+            backgroundColor: counts.map((c, idx) => idx <= 1 ? 'rgba(16, 185, 129, 0.75)' : 'rgba(244, 63, 94, 0.75)'),
+            borderColor: counts.map((c, idx) => idx <= 1 ? '#10b981' : '#f43f5e'),
+            borderWidth: 1.5,
+            categoryPercentage: 1.0,
+            barPercentage: 0.98
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `Casos: ${ctx.raw} clientes`
+              }
+            }
+          },
+          scales: {
+            x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } },
+            y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } }
+          }
+        }
+      });
+    }
+
+    function initNormalCurveChart() {
+      const ctx = document.getElementById('chartNormalCurve').getContext('2d');
+      const labels = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+      const skewedHeights = [2, 12, 28, 38, 18, 9, 4, 2, 1];
+      const idealNormal = [1, 8, 24, 38, 24, 8, 1, 0, 0];
+
+      chartNormalCurveInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Distribución Real con Sesgo (+0.85)',
+              data: skewedHeights,
+              borderColor: '#8b5cf6',
+              backgroundColor: 'rgba(139, 92, 246, 0.2)',
+              fill: true,
+              tension: 0.4,
+              borderWidth: 3
+            },
+            {
+              label: 'Campana Teórica Sin Sesgo',
+              data: idealNormal,
+              borderColor: '#64748b',
+              borderDash: [5, 5],
+              fill: false,
+              tension: 0.4,
+              borderWidth: 1.5
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#cbd5e1', font: { size: 11 } } }
+          },
+          scales: {
+            x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+            y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } }
+          }
+        }
+      });
+    }
+
+    function initParetoChart() {
+      const ctx = document.getElementById('chartPareto').getContext('2d');
+
+      chartParetoInstance = new Chart(ctx, {
+        data: {
+          labels: ["Plataforma Lenta", "Mala Atención", "Precio Elevado", "Error en Facturación"],
+          datasets: [
+            {
+              type: 'bar',
+              label: 'Cantidad de Quejas',
+              data: [55, 25, 12, 8],
+              backgroundColor: ['rgba(2, 132, 199, 0.85)', 'rgba(99, 102, 241, 0.85)', 'rgba(100, 116, 139, 0.5)', 'rgba(100, 116, 139, 0.5)'],
+              borderRadius: 6,
+              yAxisID: 'y'
+            },
+            {
+              type: 'line',
+              label: 'Porcentaje Acumulado (Regla 80/20)',
+              data: [55, 80, 92, 100],
+              borderColor: '#f59e0b',
+              backgroundColor: '#f59e0b',
+              borderWidth: 3,
+              pointRadius: 5,
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#cbd5e1', font: { size: 11 } } }
+          },
+          scales: {
+            x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+            y: { 
+              type: 'linear', 
+              position: 'left', 
+              grid: { color: 'rgba(255, 255, 255, 0.05)' }, 
+              ticks: { color: '#94a3b8' },
+              title: { display: true, text: 'Número de Reclamos', color: '#94a3b8' }
+            },
+            y1: { 
+              type: 'linear', 
+              position: 'right', 
+              min: 0, 
+              max: 100, 
+              grid: { drawOnChartArea: false }, 
+              ticks: { color: '#f59e0b', callback: v => v + '%' },
+              title: { display: true, text: '% Acumulado', color: '#f59e0b' }
+            }
+          }
+        }
+      });
+    }
+
+    function initScatterChart() {
+      const ctx = document.getElementById('chartScatter').getContext('2d');
+      const scatterPoints = ticketsData.map(t => ({ x: t.expX, y: t.resY }));
+      const regressionLine = [
+        { x: 5, y: 80 - 2 * 5 },
+        { x: 30, y: 80 - 2 * 30 }
+      ];
+
+      chartScatterInstance = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: [
+            {
+              label: 'Tickets Individuales (Experiencia vs Tiempo)',
+              data: scatterPoints,
+              backgroundColor: 'rgba(56, 189, 248, 0.65)',
+              pointRadius: 4
+            },
+            {
+              type: 'line',
+              label: 'Línea del Modelo (Y = 80 - 2X)',
+              data: regressionLine,
+              borderColor: '#10b981',
+              borderWidth: 2.5,
+              fill: false,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#cbd5e1', font: { size: 11 } } }
+          },
+          scales: {
+            x: { 
+              grid: { color: 'rgba(255, 255, 255, 0.05)' }, 
+              ticks: { color: '#94a3b8' },
+              title: { display: true, text: 'Experiencia del Técnico (Horas X)', color: '#94a3b8' }
+            },
+            y: { 
+              grid: { color: 'rgba(255, 255, 255, 0.05)' }, 
+              ticks: { color: '#94a3b8' },
+              title: { display: true, text: 'Tiempo de Respuesta (Minutos Y)', color: '#94a3b8' }
+            }
+          }
+        }
+      });
+    }
+
+    function initSPCChart() {
+      const ctx = document.getElementById('chartSPC').getContext('2d');
+      const labels = ticketsData.map(t => t.id);
+      const actualY = ticketsData.map(t => t.resY);
+      
+      const expectedY = ticketsData.map(t => 80 - 2 * t.expX);
+      const uclY = expectedY.map(y => y + 12);
+      const lclY = expectedY.map(y => Math.max(5, y - 12));
+
+      chartSPCInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Límite Superior de Control (LSC)',
+              data: uclY,
+              borderColor: '#f43f5e',
+              borderDash: [4, 4],
+              fill: false,
+              pointRadius: 0,
+              borderWidth: 1.5
+            },
+            {
+              label: 'Límite Inferior de Control (LIC)',
+              data: lclY,
+              borderColor: '#10b981',
+              borderDash: [4, 4],
+              fill: false,
+              pointRadius: 0,
+              borderWidth: 1.5
+            },
+            {
+              label: 'Tiempo Real Registrado (Minutos)',
+              data: actualY,
+              borderColor: '#38bdf8',
+              backgroundColor: actualY.map((y, idx) => y > uclY[idx] ? '#f43f5e' : '#38bdf8'),
+              pointRadius: actualY.map((y, idx) => y > uclY[idx] ? 7 : 3),
+              borderWidth: 1.5
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#cbd5e1', font: { size: 10 } } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { display: false } },
+            y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } }
+          }
+        }
+      });
+    }
+
+    function updateSimulatedModel() {
+      const expVal = parseInt(document.getElementById('sliderExp').value);
+      const serverVal = parseInt(document.getElementById('sliderServer').value);
+
+      document.getElementById('valSliderExp').innerText = `${expVal} horas`;
+      document.getElementById('valSliderServer').innerText = serverVal === 0 ? 'Estado Actual (0%)' : `AWS +${serverVal}%`;
+
+      let projMean = Math.round((80 - (2 * expVal) - (serverVal * 0.15)) * 10) / 10;
+      if (projMean < 18) projMean = 18.0;
+
+      let compliance = Math.round(Math.min(98, Math.max(10, (30 / projMean) * 85)));
+      let complaintRed = Math.round(serverVal * 0.55);
+
+      document.getElementById('simResultMean').innerText = `${projMean} min`;
+      document.getElementById('simResultCompliance').innerText = `${compliance}%`;
+      document.getElementById('simResultComplaints').innerText = `-${complaintRed}%`;
+
+      const diffMean = Math.round((projMean - 42) * 10) / 10;
+      document.getElementById('simResultMeanDiff').innerText = diffMean < 0 ? `${diffMean} min` : `+${diffMean} min`;
+      document.getElementById('topComplianceVal').innerText = `${compliance}% (${compliance >= 85 ? 'Satisfactorio' : 'En Defectuoso'})`;
+    }
+
+    function applyOptimalBoardDecision() {
+      document.getElementById('sliderExp').value = 25;
+      document.getElementById('sliderServer').value = 100;
+      updateSimulatedModel();
+      showToast('Escenario Óptimo Aplicado: Requisito de 25 horas y Servidores AWS al 100%.');
+    }
+
+    function calculateRequiredX() {
+      const targetY = parseFloat(document.getElementById('calcTargetY').value) || 30;
+      const requiredX = Math.max(0, (80 - targetY) / 2);
+      document.getElementById('calcResultX').innerText = `${requiredX.toFixed(1)} Horas`;
+      showToast(`Para garantizar máximo ${targetY} min, se debe exigir ${requiredX.toFixed(1)} horas de experiencia.`);
+    }
+
+    const ishikawaDetails = {
+      'Mano de Obra': {
+        title: 'Mano de Obra - Falta de Experiencia Práctica',
+        desc: 'Los técnicos con menos de 25 horas de práctica demoran más de 45 minutos. Solución: Exigir X ≥ 25 horas en contratación.'
+      },
+      'Maquinaria': {
+        title: 'Maquinaria - Infraestructura Local Carencial',
+        desc: 'Servidores antiguos con memoria saturada colapsan en horas pico. Solución: Migración a la nube AWS.'
+      },
+      'Métodos': {
+        title: 'Métodos - Consultas a Base de Datos no Optimizadas',
+        desc: 'El software realiza escaneos masivos en cada ticket. Solución: Re-indexación de la base de datos.'
+      },
+      'Materiales': {
+        title: 'Materiales - Formulario Digital Web',
+        desc: 'La captura digital opera correctamente (100 casos sin fallos), pero los adjuntos pesados retrasan la carga.'
+      },
+      'Medición': {
+        title: 'Medición - Uso Engañoso del Promedio Simple',
+        desc: 'Se medía la media en lugar del Percentil 95. Solución: Adopción del indicador P95 ≤ 35 min.'
+      },
+      'Medio Ambiente': {
+        title: 'Medio Ambiente - Horarios de Alta Concurrencia',
+        desc: 'Concentración del 60% del tráfico total entre 9:00 AM y 11:00 AM.'
+      }
+    };
+
+    function showIshikawaDetail(key) {
+      const detail = ishikawaDetails[key];
+      if (detail) {
+        document.getElementById('ishikawaTitle').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> ${detail.title}`;
+        document.getElementById('ishikawaDescription').innerText = detail.desc;
+        showToast(`Categoría ${key} seleccionada.`);
+      }
+    }
+
+    function triggerOutlierAudit() {
+      switchTab('tabSPC');
+      showToast('Caso N° 45 identificado por fuera del límite (55 min). Reporte enviado a auditoría.');
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMessage').innerText = msg;
+      toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+      }, 3500);
+    }
+
+    function copyExecutiveReport() {
+      const text = `DICTAMEN GERENCIAL DE CALIDAD - TECHSOLUTIONS INC.
+Tiempo Promedio Actual: 42.0 min | Política Máxima: 30.0 min
+Desviación Estándar: 12.0 min | Varianza: 144.0 min²
+Modelo Predictivo RH: Y = 80 - 2X (Requisito Mínimo X >= 25 horas)
+Acciones Aprobadas: Migración AWS (Pareto 55%) y Auditoría Disciplinaria al Técnico N° 45.`;
+      
+      const dummy = document.createElement('textarea');
+      document.body.appendChild(dummy);
+      dummy.value = text;
+      dummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummy);
+      
+      showToast('Dictamen copiado al portapapeles.');
+    }
+  </script>
+</body>
+</html>
