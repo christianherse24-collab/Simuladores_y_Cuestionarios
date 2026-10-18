@@ -659,7 +659,7 @@
                 <text x="70" y="117" fill="#94a3b8" font-size="9" text-anchor="middle">Cliente abre Ticket</text>
 
                 <!-- Arrow 1 -->
-                <line x1="130" y1="105" x2="165" y2="105" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+                <line x1="130" y1="105" x2="165" y2="105" stroke="#475569" stroke-width="2"/>
 
                 <!-- Paso 2: Asignación -->
                 <rect x="170" y="80" width="130" height="50" rx="8" fill="#1e293b" stroke="#0284c7" stroke-width="2"/>
@@ -757,4 +757,89 @@
               <i class="fa-solid fa-shield-halved text-rose-400"></i> Detección de Causas Especiales
             </h3>
             <p class="text-slate-300 leading-relaxed">
-              <strong>¿Qué nos muestra este gráfico?</strong> El 99.7% de los casos normales deben flotar entre las líneas discontinuas. Puntos fuera de límite representan fallas humanas o del sistema no aleatorias
+              <strong>¿Qué nos muestra este gráfico?</strong> El 99.7% de los casos normales deben flotar entre las líneas discontinuas. Puntos fuera de límite representan fallas humanas o del sistema no aleatorias.
+            </p>
+            <!-- Highlighted Outlier Card -->
+            <div class="p-3.5 bg-rose-950/50 border border-rose-800/60 rounded-xl space-y-2 text-rose-200">
+              <div class="flex justify-between font-bold">
+                <span>ANOMALÍA DETECTADA:</span>
+                <span class="text-rose-400">Técnico N° 45</span>
+              </div>
+              <ul class="space-y-1 text-[11px] text-slate-300">
+                <li>• Experiencia del Técnico: <strong>30 horas</strong></li>
+                <li>• Tiempo Esperado según modelo (Ŷ): <strong>20 minutos</strong></li>
+                <li>• Límite Superior Permitido (LSC): <strong>32 minutos</strong></li>
+                <li>• Tiempo Real Registrado: <strong class="text-rose-400">55 minutos</strong></li>
+              </ul>
+            </div>
+            <div class="p-3 bg-slate-800/80 rounded-lg text-slate-300 leading-normal">
+              <strong>Decisión Gerencial SPC:</strong>
+              El retraso del Técnico N° 45 no se debe al azar. Se ordena auditoría disciplinaria individualizada por negligencia u omisión de protocolo.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- TAB 9: DIAGRAMA DE DISPERSIÓN Y REGRESIÓN LINEAL -->
+    <div id="tabScatter" class="tab-content space-y-6 hidden">
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30">Herramienta N° 8</span>
+              <h2 class="text-xl font-bold text-white">Regresión Lineal Simple (Relación Experiencia vs Tiempo)</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Ecuación de Modelo: <strong>Y = 80 - 2X</strong> | Correlación Fuerte: <strong>r = -0.88</strong> | Error Estándar: <strong>Syx = 4 min</strong>
+            </p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 h-[360px] bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+            <canvas id="chartScatter"></canvas>
+          </div>
+          <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-4 text-xs">
+            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+              <i class="fa-solid fa-calculator text-emerald-400"></i> Calculadora de Regla RH
+            </h3>
+            <p class="text-slate-300 leading-relaxed">
+              Ingrese el tiempo de respuesta máximo que la empresa desea prometer al cliente (Y) para calcular cuántas horas de experiencia mínima (X) se le debe exigir al técnico contratado:
+            </p>
+            <div class="space-y-3 bg-slate-800/80 p-3.5 rounded-xl border border-slate-700">
+              <label class="block text-slate-300 font-semibold">Tiempo Máximo Prometido (Y en minutos):</label>
+              <div class="flex gap-2">
+                <input type="number" id="calcTargetY" value="30" min="10" max="60" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-sky-500">
+                <button onclick="calculateRequiredX()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition shrink-0">Calcular</button>
+              </div>
+            </div>
+            <div class="p-3.5 bg-emerald-950/40 border border-emerald-800/40 rounded-lg text-emerald-300 space-y-1">
+              <span class="text-[11px] text-emerald-400 font-medium uppercase">Experiencia Mínima Exigida al Técnico (X):</span>
+              <div class="text-2xl font-black" id="calcResultX">25.0 Horas</div>
+              <p class="text-[11px] text-slate-400 mt-1">Despeje matemático directo: Y = 80 - 2X  ➔  30 = 80 - 2X  ➔  X = 25 horas.</p>
+            </div>
+            <div class="p-3 bg-slate-800/60 rounded-lg text-slate-300 leading-normal">
+              <strong>Decisión de Directiva RH:</strong> Modificar inmediatamente el manual de puestos. Todo técnico con menos de 25 horas contratado generará incumplimiento de la meta de 30 minutos.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- Modal: Executive Dictamen Summary -->
+  <div id="modalExecutiveSummary" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl p-6 space-y-6 shadow-2xl relative">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-black">
+            TS
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-white">Dictamen Gerencial de Calidad Aplicada</h3>
+            <p class="text-xs text-slate-400">TechSolutions Inc. - Informe Ejecutivo para la Junta Directiva</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modalExecutiveSummary')" class="text-slate-400 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="space-y-4 text-xs text-
